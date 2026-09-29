@@ -1,12 +1,12 @@
 # MASTER_STATE
 
-Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering MVP slice + Design/QA polish.
+Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official Devpost/rules re-fetched).
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| Milestone | **IMPLEMENT → DEMO PREP** (MVP deployed; UX polish + screenshots on #3) |
+| Milestone | **DEMO PREP → COMPLIANCE HARDENING** (~38% submission-ready; live YouCam + video + repo access still open) |
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
@@ -34,24 +34,31 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 ## Open questions (need human / Lead)
 
 1. ~~Confirm or reject SkinCast~~ — **LOCKED SkinCast.**
-2. Devpost registration completed? Redeem code email received?
-3. **YouCam account + `YOUCAM_API_KEY` + unit balance** — human must add key in Vercel → project **youcam-ai-commerce** → Settings → Environment Variables (Production + Preview), then redeploy. Also `.env.local` for local. See `docs/SECURITY.md`. Deployed site is **mock** until this is done.
-4. Entrant eligibility (age, country — exclusions include China, Italy, Brazil, Quebec, etc.)?
+2. **Devpost Join completed?** Redeem-code email received? (still unverified — compliance 2026-09-29)
+3. **YouCam account + redeem 1,000 units + `YOUCAM_API_KEY`** — CONDITIONAL GO to add key in Vercel (Production + Preview) then redeploy once Join + signup + redeem done. Confirm `/api/health` → `youcamLive: true`. Never git. See `docs/SECURITY.md`. Prod is still **mock**.
+4. Entrant eligibility (age, excluded territories incl. China, Italy, Brazil, Quebec, Russia, Cuba, Iran, NK, Sudan, Belarus, Vietnam, Crimea/Donetsk/Luhansk, OFAC, etc.)?
 5. Team composition / Representative? Women in Tech or Rising Star opt-in?
 6. LLM provider for richer agent layer (optional; MVP uses rule-based matching)?
-7. ~~Real Shopify vs mock catalog~~ — mock for MVP.
+7. ~~Real Shopify vs mock catalog~~ — mock for MVP (Lead D7; compliance G6 OK if disclosed).
 8. India-region ToS path needed?
+9. **Repo access for judges:** make public + add LICENSE, **or** share private repo with `contact_event@PerfectCorp.com`? (currently private, no license — **Not met**)
+10. Demo selfie / face likeness consent for public screenshots + video?
+11. Prefer YouTube vs Vimeo for demo video? (Rules: YT/Vimeo; ignore Youku-only home copy — Rules prevail)
 
 ## Risks
 
 | Risk | Severity | Mitigation |
 | --- | --- | --- |
-| No API key / units blocks real YouCam path | High | Human: Join Devpost → signup YouCam → redeem 1,000 units; mock mode unblocks UI demo |
-| Unit burn (analysis + simulation + retries) | Medium | Cache; limit HD concerns; social bonus units |
-| Image quality / API error codes kill demo | Medium | Upload guidance + mock fallback |
-| Concept looks like API wrapper | High | Claim→concern mapping + commerce action shipped in slice |
-| Medical/diagnosis perception | Medium | Retail wellness disclaimer on UI |
-| Deadline slip (demo video + deploy) | Medium | Vertical slice early; compliance checklist |
+| No API key / units → judges never see real YouCam (Stage 1 grey) | **Critical** | Human: Join → YouCam signup → redeem → Vercel env → live smoke + re-capture media |
+| Private repo / no LICENSE / not shared with PerfectCorp | **Critical** | Public+LICENSE or email `contact_event@PerfectCorp.com` before submit |
+| No 1–3 min public demo video / device footage | **Critical** | Shoot from `DEMO_SCRIPT.md` on live path; YouTube preferred |
+| Mock-only screenshots on store | High | Re-shoot after live key; upload to Devpost form |
+| Concept looks like API wrapper if mock-only | High | Live Analysis + Simulation in video; claim→concern already in code |
+| Medical/diagnosis perception | Medium | Keep UI disclaimer; scrub video language |
+| Unit burn (analysis + simulation + retries) | Medium | Cache; limit concerns; optional social bonus units |
+| Image quality / API errors kill demo | Medium | Upload guidance; keep mock fallback for local only |
+| Judging-date mismatch (Rules vs Devpost dates page) | Low | Follow Rules §1; ask wendy_yen@perfectcorp.com if needed |
+| Deadline slip (video + Devpost package) | Medium | Compliance matrix + RELEASE_CHECKLIST; submit before Nov 2 11:45 ET |
 
 ## Tasks by workstream
 
@@ -92,17 +99,19 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 - [ ] Record 1–3 min judge video from demo script
 
 ### Demo / Submit (later)
-- [ ] Screenshots on Devpost + 1–3 min public video
+- [ ] Screenshots on Devpost + 1–3 min public video (live path preferred)
 - [ ] Optional social sharing bonus
-- [ ] Final compliance audit; human submits
+- [x] Compliance re-audit vs official rules (2026-09-29) — **not** submission-ready (~38%)
+- [ ] Human submits on Devpost
 
 ## Next actions (ordered)
 
-1. **Human:** Add `YOUCAM_API_KEY` in Vercel project Settings → Environment Variables; redeploy; confirm `/api/health` → `youcamLive: true`.
-2. **Engineering / Design:** Avoid thrashing UI vs API files; Design owns UX on #3; Engineering stays on deploy/config/API.
-3. **Design/QA:** Re-capture live screenshots + shoot demo video per `DEMO_SCRIPT.md` once key is live.
-4. **All:** Keep `HACKATHON_COMPLIANCE.md` rows updated.
-5. **Lead/human:** Devpost join, eligibility, final submission package.
+1. **Human:** Confirm eligibility + Devpost Join + YouCam signup + redeem units.
+2. **Human:** Add `YOUCAM_API_KEY` in Vercel (CONDITIONAL GO once step 1 done); redeploy; confirm `/api/health` → `youcamLive: true`.
+3. **Human / Lead:** Resolve repo judge access (public+LICENSE **or** share with contact_event@PerfectCorp.com).
+4. **Design/QA:** Re-capture **live** screenshots + shoot ≤3 min device video per `DEMO_SCRIPT.md`; host on YouTube/Vimeo.
+5. **Lead/human:** Draft Devpost text description; optional WiT / Rising Star / social bonus; submit before Nov 2 11:45 ET.
+6. **All:** Keep `HACKATHON_COMPLIANCE.md` honest — no fake “ready” claims.
 
 ## Specialist state pointers
 
@@ -126,3 +135,4 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 | 2026-09-29 | Production deploy https://youcam-ai-commerce.vercel.app verified mock; PRs #1/#2 closed → #3 |
 | 2026-09-29 | Design/QA: UX_SPEC, DEMO_SCRIPT, UI polish, mock QA; milestone → DEMO PREP |
 | 2026-09-29 | Engineering: production redeploy required for `0d84d16`; `/` + `/api/health` re-verified mock |
+| 2026-09-29 | Compliance audit: official Devpost/rules re-fetched; matrix rebuilt; ~38% ready; CONDITIONAL GO on credentials; critical gaps = live API, private/unlicensed repo, video |
