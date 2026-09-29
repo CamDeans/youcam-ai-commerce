@@ -15,7 +15,7 @@
 | Env | Health | Notes |
 | --- | --- | --- |
 | Local mock | `{"ok":true,"youcamLive":false,"mode":"mock"}` | Verified this pass |
-| Production mock | `{"ok":true,"youcamLive":false,"mode":"mock"}` | Verified this pass (pre- and post-redeploy) |
+| Production mock | `{"ok":true,"youcamLive":false,"mode":"mock"}` | Verified post-redeploy `a20856d` / `dpl_BaMQeULiFhymXsikJi74NS8A7Lfe` |
 | Live YouCam | — | **Blocked** — human must add key + redeploy |
 
 ---

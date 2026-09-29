@@ -15,10 +15,24 @@
 | Milestone | DEMO PREP / compliance harden |
 | Stack | Next.js App Router + TypeScript + Tailwind on Vercel |
 | Production URL | **https://youcam-ai-commerce.vercel.app** |
+| Production SHA | `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`) |
 | Vercel | Team SOGIS · project `youcam-ai-commerce` |
 | YouCam | Server-only Bearer; Analysis v2.1 + Simulation v2.0 |
 | Deploy mode now | **mock** (`/api/health` → `youcamLive: false`) |
 | Test plan | `docs/TEST_PLAN.md` |
+
+---
+
+## Deploy verification (2026-09-29 smoke harden)
+
+| Check | Result |
+|-------|--------|
+| `GET /` | 200; Demo mode + Retail wellness / not medical |
+| `GET /api/health` | `{ ok: true, youcamLive: false, mode: "mock" }` |
+| `POST /api/analyze` (demo selfie) | mock + 4 products |
+| `POST /api/analyze` (text/plain) | 400 unsupported type |
+| `GET` nonsense path | 404 custom not-found |
+| Live YouCam | Not run (no key) |
 
 ---
 

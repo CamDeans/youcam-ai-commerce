@@ -10,7 +10,7 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — smoke-harden redeploy pending verify this pass; mock until human key |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — sha `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`) smoke-harden promoted; mock re-verified 2026-09-29 |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -138,3 +138,4 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 | 2026-09-29 | Engineering: production redeploy required for `0d84d16`; `/` + `/api/health` re-verified mock |
 | 2026-09-29 | Compliance audit: official Devpost/rules re-fetched; matrix rebuilt; ~38% ready; CONDITIONAL GO on credentials; critical gaps = live API, private/unlicensed repo, video |
 | 2026-09-29 | Smoke harden: MIT LICENSE; mock cart/disclaimer/Demo-Live clarity; TEST_PLAN; S2 → Partial (visibility still human) |
+| 2026-09-29 | Production promoted `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`); `/` + `/api/health` + analyze validation re-verified mock |
