@@ -5,14 +5,14 @@ Updated: 2026-09-29
 
 ## Current focus
 
-Discover complete for research pass. Awaiting Lead lock on recommended concept.
+Lead locked **SkinCast** (2026-09-29) over MirrorLane / ReturnShield. Engineering implementing MVP vertical slice.
 
 ## Recommendation
 
 | Field | Value |
 | --- | --- |
 | Concept | **SkinCast** |
-| Status | LOCKED by Lead (2026-09-29) (not locked) |
+| Status | **LOCKED by Lead (2026-09-29)** |
 | Why YouCam | Dermatologist-oriented multi-concern analysis + realistic skin before/after simulation cannot be replaced by LLM text; they are the trust loop before purchase |
 | Doc | [`../PRODUCT_DECISION.md`](../PRODUCT_DECISION.md) |
 | Score | 50/55 — top of scorecard |
