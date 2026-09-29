@@ -3,7 +3,7 @@
 **Agents:** Deploy readiness (`bc-f01e4438`) + prod-harden complement (`bc-7aa549a9`)  
 **Last updated:** 2026-09-29  
 **Branch:** `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3)  
-**Status:** Pre-credential harden on branch; baseline `11049be` **promoted/verified** on prod (mock); partner complement `cbd80bf` may need follow-up promote; **blocked** on human YouCam key for live
+**Status:** Pre-credential harden **promoted/verified** on prod (mock @ `cbd80bf`); **blocked** on human YouCam key for live
 
 ---
 
@@ -15,10 +15,10 @@
 | Milestone | DEMO PREP / **prod harden** (pre-credentials) |
 | Stack | Next.js App Router + TypeScript + Tailwind on Vercel |
 | Production URL | **https://youcam-ai-commerce.vercel.app** |
-| Production SHA (last verified) | `11049be` (`dpl_5V9PnFG6pJcQbppedw4fsSnREAzw`); tip may be `cbd80bf`+ |
+| Production SHA | `cbd80bf` (`dpl_FdZRGKop5z3CW28hUzd8xy19zzux`) |
 | Vercel | Team SOGIS · project `youcam-ai-commerce` |
-| YouCam | Timeouts + retries; structured/public-safe errors; Analysis v2.1 + Simulation v2.0 |
-| Deploy mode now | **mock** (`youcamLive: false`) |
+| YouCam | Timeouts + retries; structured public errors (no secret leak); Analysis v2.1 + Simulation v2.0 |
+| Deploy mode now | **mock** (`youcamLive: false`, `commit: cbd80bf`) |
 | Test plan | `docs/TEST_PLAN.md` |
 | Deploy readiness | store `docs/deploy-readiness.md` |
 | CI | `.github/workflows/ci.yml` (+ Playwright smoke job) |
@@ -27,7 +27,7 @@
 
 ## Combined harden
 
-**Deploy-readiness (`11049be`):** CI, vitest baseline, CSP/headers, YouCam timeouts/retries, rate limits, structured logs, error boundaries, robots/sitemap/OG, offline + client timeouts, no base64 echo. **Prod verify:** CSP/XFO/nosniff/Referrer/Permissions; `/robots.txt` 200; health `commit:11049be`.
+**Deploy-readiness (`11049be`):** CI, vitest baseline, CSP/headers, YouCam timeouts/retries, rate limits, structured logs, error boundaries, robots/sitemap/OG, offline + client timeouts, no base64 echo.
 
 **Complement (`cbd80bf`):**
 - Playwright critical-path smoke + CI e2e job
@@ -39,20 +39,23 @@
 
 ---
 
-## Deploy verification (`11049be` production)
+## Deploy verification (2026-09-29 prod harden `cbd80bf`)
 
 | Check | Result |
 |-------|--------|
-| `GET /` + security headers | Pass (CSP, XFO, nosniff, Referrer, Permissions) |
-| `GET /api/health` mock + version/commit | Pass (`commit:11049be`, `mode:mock`) |
-| `GET /robots.txt` | Pass 200 |
-| `POST /api/analyze` mock | Prior smoke Pass; re-check after complement promote |
+| `GET /` | 200; CSP + XFO + nosniff + Referrer + Permissions-Policy |
+| `GET /api/health` | `{ ok, youcamLive:false, mode:mock, version:0.1.0, commit:cbd80bf, vercelEnv:production }` + `Cache-Control: no-store` |
+| `GET /robots.txt` | 200; Disallow `/api/`; Sitemap present |
+| `POST /api/analyze` mock | mode=mock, 8 concerns, 4 products, no `previewDataUrl` |
+| `POST /api/analyze` text/plain | 400 `code:VALIDATION` |
+| `POST /api/simulate` mock | mode=mock SVG after-cast |
 | Live YouCam | Not run (no key) |
 
 ---
 
 ## Blockers
 
+- [x] Promote + verify harden on production (`cbd80bf`)
 - [ ] Human: Devpost Join + YouCam signup + redeem units
 - [ ] Human: add `YOUCAM_API_KEY` in Vercel (never git) → redeploy → live smoke
 - [ ] Human: make repo public **or** share with `contact_event@PerfectCorp.com`

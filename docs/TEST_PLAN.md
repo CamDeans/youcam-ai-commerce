@@ -31,7 +31,7 @@ Coverage includes: matcher/mock/parser, env (`YOUCAM_MODE=live` fail), rate limi
 | Env | Health | Notes |
 | --- | --- | --- |
 | Local mock | `mode:mock`, `youcamLive:false` | Verified |
-| Production | Verify after promote of this harden | Expect headers + robots + mock health |
+| Production | `mode:mock`, `commit:cbd80bf`, `dpl_FdZRGKop5z3CW28hUzd8xy19zzux` | Headers + robots + health + analyze/simulate verified |
 | Live YouCam | — | **Blocked** on human key |
 
 ---

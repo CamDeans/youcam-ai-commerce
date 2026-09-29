@@ -17,7 +17,7 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + du
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — tip `cbd80bf` on prod (mock); baseline `11049be` + partner complement verified; headers/robots/health OK |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — `cbd80bf` (`dpl_FdZRGKop5z3CW28hUzd8xy19zzux`) harden promoted; mock + headers/robots/health/APIs verified 2026-09-29 |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -90,8 +90,7 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + du
 - [x] Vercel project linked + production deploy (mock verified)
 - [x] Deploy-readiness matrix (store `docs/deploy-readiness.md`) + P0/P1 can-fix-now on PR #3
 - [x] Complement: Playwright smoke, API route vitest, secret-safe API errors, `YOUCAM_MODE=live` fail-clearly
-- [x] Promote baseline harden `11049be` to production + verify headers/robots/health
-- [ ] Promote partner complement `cbd80bf`+ if not yet on production aliases
+- [x] Promote harden to production + verify headers/robots/health (`11049be` then `cbd80bf` / `dpl_FdZRGKop5z3CW28hUzd8xy19zzux`)
 - [ ] Update compliance privacy/deploy rows with final URLs for submit
 
 ### Build
@@ -154,4 +153,4 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + du
 | 2026-09-29 | Production promoted `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`); `/` + `/api/health` + analyze validation re-verified mock |
 | 2026-09-29 | Deploy-readiness audit (store docs); P0/P1 can-fix-now on PR #3 |
 | 2026-09-29 | Production promoted `11049be` (`dpl_5V9PnFG6pJcQbppedw4fsSnREAzw`); health=`mock`+commit; CSP/XFO/nosniff/robots verified |
-| 2026-09-29 | Partner complement: Playwright + API route tests + secret-safe errors (`cbd80bf`) |
+| 2026-09-29 | Partner complement `cbd80bf` (`dpl_FdZRGKop5z3CW28hUzd8xy19zzux`): Playwright + API route tests + secret-safe errors; prod re-verified mock |
