@@ -10,7 +10,7 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** (verified mock) |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — sha `0d84d16` (Design polish) promoted to production; mock re-verified 2026-09-29 |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -125,3 +125,4 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 | 2026-09-29 | Lead LOCK SkinCast; milestone DESIGN→IMPLEMENT; Engineering MVP slice |
 | 2026-09-29 | Production deploy https://youcam-ai-commerce.vercel.app verified mock; PRs #1/#2 closed → #3 |
 | 2026-09-29 | Design/QA: UX_SPEC, DEMO_SCRIPT, UI polish, mock QA; milestone → DEMO PREP |
+| 2026-09-29 | Engineering: production redeploy required for `0d84d16`; `/` + `/api/health` re-verified mock |
