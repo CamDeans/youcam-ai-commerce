@@ -48,6 +48,15 @@ npm install
 npm run dev
 ```
 
+Quality gates (also run in GitHub Actions CI):
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
 Open [http://localhost:3000](http://localhost:3000).
 
 ### Add YouCam key on Vercel (human only)

@@ -1,7 +1,8 @@
 # Release Checklist
 
 Derived from the YouCam Hackathon Operating System. Mark **only after verification** — never claim done/deployed/tested without evidence.  
-**Not submission-ready** until live YouCam + Devpost package + human gates close.
+**Not submission-ready** until live YouCam + Devpost package + human gates close.  
+**Pre-credential deploy readiness:** store `docs/deploy-readiness.md` — engineering harden landed on PR #3; production redeploy verify may lag.
 
 **References:** Devpost · [Rules](https://youcam-api-skin-ai-ecommerce.devpost.com/rules) · `docs/SECURITY.md` · `docs/HACKATHON_COMPLIANCE.md` · `docs/TEST_PLAN.md`
 
@@ -11,9 +12,9 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 
 - [x] YouCam necessity is obvious to a judge (README + UI path + demo script)
 - [x] No secrets in git history (spot-check; `.env.example` placeholders only)
-- [x] Docs under `/docs/agent-state/` stay synchronized (this harden pass)
+- [x] Docs under `/docs/agent-state/` stay synchronized (deploy-readiness harden)
 - [x] Never claim done / deployed / tested without verification
-- [x] Max 4 agents; ownership boundaries respected
+- [x] Max 4 agents; ownership boundaries respected (coordination lock in MASTER_STATE)
 - [x] Human-only gates not bypassed (MFA, payments, legal, final submission, API key)
 
 ---
@@ -47,12 +48,16 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 
 - [ ] Slice 0 spike: YouCam reachable with env-only credentials (**blocked on human key**)
 - [x] Slice 1 MVP: YouCam → visible result → commerce action (E2E **mock** path verified)
-- [x] Error states and empty states demo-safe
+- [x] Error states and empty states demo-safe (+ React `error.tsx` / `global-error.tsx`)
 - [x] No secrets in client bundles or repo
 - [x] Mock cart clearly labeled (no live-payment claims)
 - [x] Wellness disclaimer on scores + footer
 - [x] Demo vs Live mode chip + banner
 - [x] MIT `LICENSE` added (repo visibility / PerfectCorp share still **human**)
+- [x] CI: lint · typecheck · test · build · `npm audit --audit-level=high`
+- [x] YouCam client timeouts + safe retries; API rate limits; structured request logs
+- [x] Security headers + pragmatic CSP (`next.config.ts`)
+- [x] robots.txt + sitemap + OG/Twitter metadata
 
 ---
 
@@ -62,6 +67,7 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 - [ ] Production YouCam path verified with a real demo run (**blocked on key**)
 - [x] Commerce action verified on deployed environment (**mock cart**)
 - [x] Smoke checklist recorded — `docs/TEST_PLAN.md`
+- [ ] Production redeploy of deploy-readiness harden verified (headers /robots /health fields) — **partner or follow-up after push**
 
 ---
 
@@ -78,7 +84,8 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 ## 7. Final audit & submission
 
 - [x] Compliance re-audit vs latest Devpost rules (`docs/HACKATHON_COMPLIANCE.md`)
-- [ ] Release checklist fully reviewed with Lead
+- [x] Deploy-readiness gap matrix (store `docs/deploy-readiness.md`) — **not** claiming ready
+- [ ] Release checklist fully reviewed with Lead + human
 - [ ] Human: public repo **or** share with contact_event@PerfectCorp.com
 - [ ] Human completes final Devpost submission
 - [ ] Post-submit: agent-state updated with final URLs and commit SHA
@@ -90,5 +97,5 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 | Role | Name | Date | Notes |
 |------|------|------|-------|
 | Engineering + QA | smoke-harden | 2026-09-29 | Mock path only; not submission-ready |
-| Lead | | | |
+| Lead / deploy readiness | bc-f01e4438 | 2026-09-29 | P0/P1 can-fix-now landed on PR #3; prod verify pending; **not** submission-ready |
 | Human (submission) | | | |

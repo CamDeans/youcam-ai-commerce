@@ -1,14 +1,17 @@
 import type { ConcernKey, ConcernScore, SimulationMap } from "../types";
+import { getAppEnv } from "../env";
 
-const DEFAULT_BASE = "https://yce-api-01.makeupar.com";
+const FETCH_TIMEOUT_MS = 25_000;
+const PUT_TIMEOUT_MS = 45_000;
+const MAX_RETRIES = 2;
 
 export function getYouCamConfig() {
-  const apiKey = process.env.YOUCAM_API_KEY?.trim() ?? "";
-  const baseUrl = (process.env.YOUCAM_API_BASE_URL?.trim() || DEFAULT_BASE).replace(
-    /\/$/,
-    "",
-  );
-  return { apiKey, baseUrl, enabled: apiKey.length > 0 };
+  const env = getAppEnv();
+  return {
+    apiKey: env.youcamApiKey,
+    baseUrl: env.youcamBaseUrl,
+    enabled: env.youcamEnabled,
+  };
 }
 
 function authHeaders(apiKey: string): HeadersInit {
@@ -16,6 +19,64 @@ function authHeaders(apiKey: string): HeadersInit {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
   };
+}
+
+function isNonRetryableMessage(message: string): boolean {
+  const m = message.toLowerCase();
+  return (
+    m.includes("creditinsufficiency") ||
+    m.includes("credit") ||
+    m.includes("insufficient") ||
+    m.includes("unauthorized") ||
+    m.includes("invalidparameters") ||
+    m.includes("forbidden")
+  );
+}
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error(`YouCam request timed out after ${timeoutMs}ms`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Retry transient network / 5xx only. Never retry credit or auth failures. */
+async function fetchYouCam(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number = FETCH_TIMEOUT_MS,
+): Promise<Response> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const res = await fetchWithTimeout(url, init, timeoutMs);
+      if (res.status >= 500 && attempt < MAX_RETRIES) {
+        await sleep(400 * (attempt + 1));
+        continue;
+      }
+      return res;
+    } catch (err) {
+      lastError = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (isNonRetryableMessage(msg) || attempt >= MAX_RETRIES) throw err;
+      await sleep(400 * (attempt + 1));
+    }
+  }
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("YouCam request failed");
 }
 
 type FileCreateResponse = {
@@ -42,7 +103,7 @@ export async function uploadImageToYouCam(
   const { apiKey, baseUrl } = getYouCamConfig();
   if (!apiKey) throw new Error("YOUCAM_API_KEY is not set");
 
-  const createRes = await fetch(`${baseUrl}/s2s/v2.0/file`, {
+  const createRes = await fetchYouCam(`${baseUrl}/s2s/v2.0/file`, {
     method: "POST",
     headers: authHeaders(apiKey),
     body: JSON.stringify({
@@ -58,9 +119,10 @@ export async function uploadImageToYouCam(
 
   const createJson = (await createRes.json()) as FileCreateResponse;
   if (!createRes.ok) {
-    throw new Error(
-      createJson.error || createJson.error_code || `File API failed (${createRes.status})`,
-    );
+    const msg =
+      createJson.error || createJson.error_code || `File API failed (${createRes.status})`;
+    if (isNonRetryableMessage(msg)) throw new Error(msg);
+    throw new Error(msg);
   }
 
   const file = createJson.data?.files?.[0];
@@ -77,11 +139,15 @@ export async function uploadImageToYouCam(
     putHeaders["Content-Type"] = contentType === "image/jpeg" ? "image/jpg" : contentType;
   }
 
-  const putRes = await fetch(uploadReq.url, {
-    method: uploadReq.method || "PUT",
-    headers: putHeaders,
-    body: Buffer.from(bytes),
-  });
+  const putRes = await fetchWithTimeout(
+    uploadReq.url,
+    {
+      method: uploadReq.method || "PUT",
+      headers: putHeaders,
+      body: Buffer.from(bytes),
+    },
+    PUT_TIMEOUT_MS,
+  );
 
   if (!putRes.ok) {
     throw new Error(`Upload to YouCam storage failed (${putRes.status})`);
@@ -124,18 +190,18 @@ async function createAndPoll(
   const { apiKey, baseUrl } = getYouCamConfig();
   if (!apiKey) throw new Error("YOUCAM_API_KEY is not set");
 
-  const createRes = await fetch(`${baseUrl}${createPath}`, {
+  const createRes = await fetchYouCam(`${baseUrl}${createPath}`, {
     method: "POST",
     headers: authHeaders(apiKey),
     body: JSON.stringify(body),
   });
   const createJson = (await createRes.json()) as TaskCreateResponse;
   if (!createRes.ok || !createJson.data?.task_id) {
-    throw new Error(
+    const msg =
       createJson.error ||
-        createJson.error_code ||
-        `Task create failed (${createRes.status})`,
-    );
+      createJson.error_code ||
+      `Task create failed (${createRes.status})`;
+    throw new Error(msg);
   }
 
   const taskId = createJson.data.task_id;
@@ -144,7 +210,7 @@ async function createAndPoll(
 
   for (let i = 0; i < maxAttempts; i++) {
     await sleep(interval);
-    const pollRes = await fetch(`${baseUrl}${pollPathPrefix}/${taskId}`, {
+    const pollRes = await fetchYouCam(`${baseUrl}${pollPathPrefix}/${taskId}`, {
       method: "GET",
       headers: authHeaders(apiKey),
     });
@@ -271,7 +337,6 @@ export function parseAnalysisConcerns(results: unknown): {
 
   visit(results);
 
-  // de-dupe by key keeping max score
   const map = new Map<ConcernKey, ConcernScore>();
   for (const c of concerns) {
     const prev = map.get(c.key);

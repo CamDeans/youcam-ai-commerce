@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { matchProducts } from "@/lib/match";
+import { createRequestId, log } from "@/lib/logger";
+import { clientKeyFromRequest, rateLimit } from "@/lib/rate-limit";
 import {
   getYouCamConfig,
   runSkinAnalysis,
@@ -18,41 +20,65 @@ const ALLOWED_TYPES = new Set([
 ]);
 const MAX_BYTES = 8 * 1024 * 1024;
 
+function json(
+  body: unknown,
+  init?: { status?: number; requestId?: string },
+) {
+  const res = NextResponse.json(body, { status: init?.status ?? 200 });
+  res.headers.set("Cache-Control", "no-store, max-age=0");
+  if (init?.requestId) res.headers.set("x-request-id", init.requestId);
+  return res;
+}
+
 export async function POST(request: Request) {
+  const requestId = createRequestId();
   try {
+    const rl = rateLimit(`analyze:${clientKeyFromRequest(request)}`, {
+      limit: 20,
+      windowMs: 60_000,
+    });
+    if (!rl.ok) {
+      log("warn", "analyze_rate_limited", { requestId, retryAfterSec: rl.retryAfterSec });
+      return json(
+        { error: "Too many analysis requests. Please wait a moment." },
+        { status: 429, requestId },
+      );
+    }
+
     const form = await request.formData();
     const file = form.get("image");
     if (!(file instanceof File)) {
-      return NextResponse.json({ error: "Missing image file" }, { status: 400 });
+      return json({ error: "Missing image file" }, { status: 400, requestId });
     }
 
     const contentType = (file.type || "").toLowerCase();
     if (contentType && !ALLOWED_TYPES.has(contentType)) {
-      return NextResponse.json(
+      return json(
         { error: "Unsupported file type. Use jpg, png, or webp." },
-        { status: 400 },
+        { status: 400, requestId },
       );
     }
     if (file.size > MAX_BYTES) {
-      return NextResponse.json(
+      return json(
         { error: "Image too large. Keep selfies under 8 MB." },
-        { status: 400 },
+        { status: 400, requestId },
       );
     }
 
     const { enabled } = getYouCamConfig();
     const bytes = await file.arrayBuffer();
     const safeType = ALLOWED_TYPES.has(contentType) ? contentType : "image/jpeg";
-    const previewDataUrl = `data:${safeType};base64,${Buffer.from(bytes).toString("base64")}`;
 
     if (!enabled) {
       const analysis = mockAnalysis();
       const products = matchProducts(analysis.concerns);
-      return NextResponse.json({
-        analysis,
-        products,
-        previewDataUrl,
+      log("info", "analyze_mock_ok", {
+        requestId,
+        productCount: products.length,
+        bytes: file.size,
       });
+      // Client keeps local preview — do not echo base64 (payload bloat).
+      return json({ analysis, products }, { requestId });
     }
 
     const fileId = await uploadImageToYouCam(
@@ -62,7 +88,6 @@ export async function POST(request: Request) {
     );
     const { concerns, skinType, raw } = await runSkinAnalysis(fileId);
 
-    // If parser finds nothing, fall back lightly so UI still works
     const safeConcerns =
       concerns.length > 0
         ? concerns
@@ -82,14 +107,16 @@ export async function POST(request: Request) {
     };
 
     const products = matchProducts(analysis.concerns);
-
-    return NextResponse.json({
-      analysis,
-      products,
-      previewDataUrl,
+    log("info", "analyze_live_ok", {
+      requestId,
+      productCount: products.length,
+      concernCount: safeConcerns.length,
     });
+
+    return json({ analysis, products }, { requestId });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Analysis failed";
-    return NextResponse.json({ error: message }, { status: 502 });
+    log("error", "analyze_failed", { requestId, error: message });
+    return json({ error: message }, { status: 502, requestId });
   }
 }

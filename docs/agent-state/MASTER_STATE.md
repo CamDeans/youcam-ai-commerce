@@ -1,16 +1,23 @@
 # MASTER_STATE
 
-Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official Devpost/rules re-fetched).
+Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + P0/P1 harden** (pre-credentials).
+
+## Coordination lock (2026-09-29 deploy readiness)
+
+| Agent | Owns | Do not thrash |
+| --- | --- | --- |
+| `bc-f01e4438-…` **Audit deploy readiness** | Gap matrix `docs/deploy-readiness.md` (store) + **P0/P1 code** on `feat/skincast-mvp` (CI, tests, headers, timeouts, error boundaries, SEO/robots, API harden) | Same files listed in engineering sync |
+| `bc-7aa549a9-…` **Harden prod pre-credentials** | After this push: **pull/rebase**, prefer **Vercel redeploy verify** + leftover P1 not already landed | Avoid parallel edits to `next.config.ts`, `youcam/client.ts`, API routes, CI until pull |
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| Milestone | **DEMO PREP → COMPLIANCE HARDENING** (~38% submission-ready; live YouCam + video + repo access still open) |
+| Milestone | **DEMO PREP → DEPLOY HARDENING (pre-credentials)** (~38% submission; P0/P1 can-fix-now on PR #3; live YouCam + video + repo access still open) |
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — sha `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`) smoke-harden promoted; mock re-verified 2026-09-29 |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — still **mock** @ smoke-harden `a20856d` until harden commit promoted; `/api/health` `youcamLive: false` |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -81,12 +88,15 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 - [x] `docs/API_INTEGRATION.md`
 - [x] Env/secrets pattern; server-only YouCam proxy
 - [x] Vercel project linked + production deploy (mock verified)
+- [x] Deploy-readiness matrix (store `docs/deploy-readiness.md`) + P0/P1 can-fix-now on PR #3
+- [ ] Promote harden commit to production + verify headers/robots/health (partner)
 - [ ] Update compliance privacy/deploy rows with final URLs for submit
 
 ### Build
 - [x] Vertical slice scaffold: landing → upload → analysis → match → simulation → cart
 - [x] Mock mode when `YOUCAM_API_KEY` absent; real APIs when present
 - [x] Deploy to Vercel — **https://youcam-ai-commerce.vercel.app** (mock smoke OK)
+- [x] CI + vitest + security headers/CSP + YouCam timeouts/retries + rate limits + error boundaries + SEO/robots
 - [ ] Production smoke with **real** YouCam key (blocked on human env)
 - [x] README polish for judges (problem / solution / why YouCam)
 
@@ -107,12 +117,13 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 
 ## Next actions (ordered)
 
-1. **Human:** Confirm eligibility + Devpost Join + YouCam signup + redeem units.
-2. **Human:** Add `YOUCAM_API_KEY` in Vercel (CONDITIONAL GO once step 1 done); redeploy; confirm `/api/health` → `youcamLive: true`.
-3. **Human / Lead:** Resolve repo judge access — **MIT LICENSE added**; still need publicize **or** share with contact_event@PerfectCorp.com.
-4. **Design/QA:** Re-capture **live** screenshots + shoot ≤3 min device video per `DEMO_SCRIPT.md`; host on YouTube/Vimeo.
-5. **Lead/human:** Draft Devpost text description; optional WiT / Rising Star / social bonus; submit before Nov 2 11:45 ET.
-6. **All:** Keep `HACKATHON_COMPLIANCE.md` honest — no fake “ready” claims.
+1. **Partner (`bc-7aa549a9`):** Pull `feat/skincast-mvp`, promote/redeploy, verify security headers + `/robots.txt` + richer `/api/health` on production (still mock).
+2. **Human:** Confirm eligibility + Devpost Join + YouCam signup + redeem units.
+3. **Human:** Add `YOUCAM_API_KEY` in Vercel (**after** step 1–2 engineering verify); redeploy; confirm `/api/health` → `youcamLive: true`.
+4. **Human / Lead:** Resolve repo judge access — **MIT LICENSE added**; still need publicize **or** share with contact_event@PerfectCorp.com.
+5. **Design/QA:** Re-capture **live** screenshots + shoot ≤3 min device video per `DEMO_SCRIPT.md`; host on YouTube/Vimeo.
+6. **Lead/human:** Draft Devpost text description; optional WiT / Rising Star / social bonus; submit before Nov 2 11:45 ET.
+7. **All:** Keep compliance + deploy-readiness honest — **not** submission-ready.
 
 ## Specialist state pointers
 
@@ -139,3 +150,4 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 | 2026-09-29 | Compliance audit: official Devpost/rules re-fetched; matrix rebuilt; ~38% ready; CONDITIONAL GO on credentials; critical gaps = live API, private/unlicensed repo, video |
 | 2026-09-29 | Smoke harden: MIT LICENSE; mock cart/disclaimer/Demo-Live clarity; TEST_PLAN; S2 → Partial (visibility still human) |
 | 2026-09-29 | Production promoted `a20856d` (`dpl_BaMQeULiFhymXsikJi74NS8A7Lfe`); `/` + `/api/health` + analyze validation re-verified mock |
+| 2026-09-29 | Deploy-readiness audit (store docs); P0/P1 can-fix-now: CI, vitest, CSP/headers, timeouts/retries, rate limits, error boundaries, SEO/robots, offline UX — on `feat/skincast-mvp` / PR #3; prod promote pending |

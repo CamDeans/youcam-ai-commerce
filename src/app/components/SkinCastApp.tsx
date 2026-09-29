@@ -30,6 +30,43 @@ function stepIndex(step: Step) {
   return STEPS.findIndex((s) => s.id === step);
 }
 
+const CLIENT_FETCH_MS = 90_000;
+
+async function fetchJson(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  timeoutMs = CLIENT_FETCH_MS,
+) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(input, { ...init, signal: controller.signal });
+    const data = await res.json().catch(() => ({}));
+    return { res, data };
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error("Request timed out — check your connection and try again.");
+    }
+    if (typeof navigator !== "undefined" && navigator.onLine === false) {
+      throw new Error("You appear offline. Reconnect, then try again.");
+    }
+    throw err instanceof Error
+      ? err
+      : new Error("Network request failed. Try again.");
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("Could not read image preview"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function SkinCastApp() {
   const [step, setStep] = useState<Step>("land");
   const [health, setHealth] = useState<Health | null>(null);
@@ -46,12 +83,25 @@ export default function SkinCastApp() {
   const [cart, setCart] = useState<MatchedProduct[]>([]);
   const [justAdded, setJustAdded] = useState(false);
   const [slider, setSlider] = useState(55);
+  const [offline, setOffline] = useState(false);
 
   useEffect(() => {
-    fetch("/api/health")
-      .then((r) => r.json())
-      .then((d) => setHealth({ youcamLive: !!d.youcamLive, mode: d.mode }))
+    fetchJson("/api/health", undefined, 15_000)
+      .then(({ data }) =>
+        setHealth({ youcamLive: !!data.youcamLive, mode: data.mode ?? "mock" }),
+      )
       .catch(() => setHealth({ youcamLive: false, mode: "mock" }));
+  }, []);
+
+  useEffect(() => {
+    const sync = () => setOffline(typeof navigator !== "undefined" && !navigator.onLine);
+    sync();
+    window.addEventListener("online", sync);
+    window.addEventListener("offline", sync);
+    return () => {
+      window.removeEventListener("online", sync);
+      window.removeEventListener("offline", sync);
+    };
   }, []);
 
   function chooseFile(next: File | null) {
@@ -70,7 +120,13 @@ export default function SkinCastApp() {
       if (prev) URL.revokeObjectURL(prev);
       return next ? URL.createObjectURL(next) : null;
     });
+    setPreviewDataUrl(null);
     setFile(next);
+    if (next) {
+      void readFileAsDataUrl(next)
+        .then(setPreviewDataUrl)
+        .catch(() => setPreviewDataUrl(null));
+    }
   }
 
   const isLive = !!health?.youcamLive;
@@ -84,18 +140,29 @@ export default function SkinCastApp() {
 
   async function runAnalysis() {
     if (!file) return;
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setError("You appear offline. Reconnect, then try again.");
+      return;
+    }
     setBusy(true);
     setBusyLabel("Running YouCam skin analysis…");
     setError(null);
     try {
       const body = new FormData();
       body.append("image", file);
-      const res = await fetch("/api/analyze", { method: "POST", body });
-      const data = await res.json();
+      const { res, data } = await fetchJson("/api/analyze", {
+        method: "POST",
+        body,
+      });
       if (!res.ok) throw new Error(data.error || "Analysis failed");
       setAnalysis(data.analysis);
       setProducts(data.products ?? []);
-      setPreviewDataUrl(data.previewDataUrl);
+      // Prefer local FileReader preview; keep any server echo if present.
+      if (typeof data.previewDataUrl === "string") {
+        setPreviewDataUrl(data.previewDataUrl);
+      } else if (!previewDataUrl) {
+        setPreviewDataUrl(await readFileAsDataUrl(file));
+      }
       setStep("results");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Analysis failed");
@@ -105,21 +172,26 @@ export default function SkinCastApp() {
   }
 
   async function runSimulate(product: MatchedProduct) {
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setError("You appear offline. Reconnect, then try again.");
+      return;
+    }
     setSelected(product);
     setBusy(true);
     setBusyLabel(`Simulating ${product.name}…`);
     setError(null);
     try {
-      const res = await fetch("/api/simulate", {
+      let before = previewDataUrl;
+      if (!before && file) before = await readFileAsDataUrl(file);
+      const { res, data } = await fetchJson("/api/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productId: product.id,
           fileId: analysis?.fileId,
-          previewDataUrl,
+          previewDataUrl: before,
         }),
       });
-      const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Simulation failed");
       setSimulation(data.simulation);
       setSlider(55);
@@ -281,6 +353,17 @@ export default function SkinCastApp() {
             </>
           )}
         </p>
+      )}
+
+      {offline && (
+        <div
+          role="status"
+          className={`mt-4 border border-[var(--mist)] bg-[var(--sand)] px-4 py-3 text-sm text-[var(--ink-soft)] ${
+            onLand ? "mx-5 sm:mx-10" : ""
+          }`}
+        >
+          You are offline. Reconnect to run analysis or simulation.
+        </div>
       )}
 
       {error && (
