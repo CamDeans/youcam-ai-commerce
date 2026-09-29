@@ -1,78 +1,85 @@
 # Release Checklist
 
-Derived from the YouCam Hackathon Operating System. **All items start unchecked.**  
-Mark only after verification — never claim done/deployed/tested without evidence.
+Derived from the YouCam Hackathon Operating System. Mark **only after verification** — never claim done/deployed/tested without evidence.  
+**Not submission-ready** until live YouCam + Devpost package + human gates close.
 
-**References:** Devpost · [Rules](https://youcam-api-skin-ai-ecommerce.devpost.com/rules) · `docs/SECURITY.md` · `docs/ARCHITECTURE.md`
+**References:** Devpost · [Rules](https://youcam-api-skin-ai-ecommerce.devpost.com/rules) · `docs/SECURITY.md` · `docs/HACKATHON_COMPLIANCE.md` · `docs/TEST_PLAN.md`
 
 ---
 
 ## 0. Operating constraints (continuous)
 
-- [ ] YouCam necessity is obvious to a judge
-- [ ] No secrets in git history
-- [ ] Docs under `/docs/agent-state/` stay synchronized
-- [ ] Never claim done / deployed / tested without verification
-- [ ] Max 4 agents; ownership boundaries respected
-- [ ] Human-only gates not bypassed (MFA, payments, legal, final submission)
+- [x] YouCam necessity is obvious to a judge (README + UI path + demo script)
+- [x] No secrets in git history (spot-check; `.env.example` placeholders only)
+- [x] Docs under `/docs/agent-state/` stay synchronized (this harden pass)
+- [x] Never claim done / deployed / tested without verification
+- [x] Max 4 agents; ownership boundaries respected
+- [x] Human-only gates not bypassed (MFA, payments, legal, final submission, API key)
 
 ---
 
 ## 1. Discover
 
-- [ ] Official Devpost page and rules reviewed (latest)
-- [ ] YouCam API capabilities relevant to the concept documented
-- [ ] Constraints / disallowed approaches noted for Lead
+- [x] Official Devpost page and rules reviewed (latest — compliance audit 2026-09-29)
+- [x] YouCam API capabilities relevant to the concept documented
+- [x] Constraints / disallowed approaches noted for Lead
 
 ---
 
 ## 2. Ideate & lock
 
-- [ ] ≥10 concepts scored
-- [ ] Single concept locked in `docs/PRODUCT_DECISION.md`
-- [ ] YouCam-essential rationale written for judges
+- [x] ≥10 concepts scored
+- [x] Single concept locked in `docs/PRODUCT_DECISION.md`
+- [x] YouCam-essential rationale written for judges
 
 ---
 
 ## 3. Architect & compliance
 
-- [ ] `docs/ARCHITECTURE.md` TBD sections filled for locked product
-- [ ] Compliance / rules alignment reviewed before significant build
-- [ ] `docs/SECURITY.md` env list matches planned integrations
-- [ ] Privacy / image retention approach agreed
+- [x] `docs/ARCHITECTURE.md` TBD sections filled for locked product
+- [x] Compliance / rules alignment reviewed before significant build
+- [x] `docs/SECURITY.md` env list matches planned integrations
+- [x] Privacy / image retention approach agreed (no DB persist; portal 24h)
 
 ---
 
 ## 4. Build (vertical slices)
 
-- [ ] Slice 0 spike: YouCam reachable with env-only credentials
-- [ ] Slice 1 MVP: YouCam → visible result → commerce action (E2E)
-- [ ] Error states and empty states demo-safe
-- [ ] No secrets in client bundles or repo
+- [ ] Slice 0 spike: YouCam reachable with env-only credentials (**blocked on human key**)
+- [x] Slice 1 MVP: YouCam → visible result → commerce action (E2E **mock** path verified)
+- [x] Error states and empty states demo-safe
+- [x] No secrets in client bundles or repo
+- [x] Mock cart clearly labeled (no live-payment claims)
+- [x] Wellness disclaimer on scores + footer
+- [x] Demo vs Live mode chip + banner
+- [x] MIT `LICENSE` added (repo visibility / PerfectCorp share still **human**)
 
 ---
 
 ## 5. Deploy & verify
 
-- [ ] Production (or stable preview) URL live
-- [ ] Production YouCam path verified with a real demo run
-- [ ] Commerce action verified on deployed environment
-- [ ] Smoke checklist recorded (steps + expected results)
+- [x] Production URL live: https://youcam-ai-commerce.vercel.app
+- [ ] Production YouCam path verified with a real demo run (**blocked on key**)
+- [x] Commerce action verified on deployed environment (**mock cart**)
+- [x] Smoke checklist recorded — `docs/TEST_PLAN.md`
 
 ---
 
 ## 6. Polish & demo
 
-- [ ] README: what it is, why YouCam is essential, how to run, demo URL
-- [ ] Screenshots / screen recording captured (no secrets visible)
-- [ ] Demo script rehearsed (≤ judge attention span)
+- [x] README: what it is, why YouCam is essential, how to run, demo URL, license/repo note
+- [x] Screenshots captured (mock path; project store `media/skincast/`)
+- [x] Demo script written (`docs/DEMO_SCRIPT.md`)
+- [ ] Demo script rehearsed on **live** path
+- [ ] 1–3 min public YouTube/Vimeo video
 
 ---
 
 ## 7. Final audit & submission
 
-- [ ] Final audit vs **latest** Devpost rules
+- [x] Compliance re-audit vs latest Devpost rules (`docs/HACKATHON_COMPLIANCE.md`)
 - [ ] Release checklist fully reviewed with Lead
+- [ ] Human: public repo **or** share with contact_event@PerfectCorp.com
 - [ ] Human completes final Devpost submission
 - [ ] Post-submit: agent-state updated with final URLs and commit SHA
 
@@ -82,6 +89,6 @@ Mark only after verification — never claim done/deployed/tested without eviden
 
 | Role | Name | Date | Notes |
 |------|------|------|-------|
-| Engineering | | | |
+| Engineering + QA | smoke-harden | 2026-09-29 | Mock path only; not submission-ready |
 | Lead | | | |
 | Human (submission) | | | |

@@ -76,7 +76,7 @@ YouCam API Skin AI & eCommerce VTO Hackathon — living checklist.
 | ID | Requirement | Source | Evidence / gap | Status |
 | --- | --- | --- | --- | --- |
 | S1 | Code repo URL for judging | Rules §4 | https://github.com/CamDeans/youcam-ai-commerce | **Partial** (exists) |
-| S2 | Repo public **with relevant licensing** OR private shared with contact_event@PerfectCorp.com | Rules §4; Devpost | GitHub **`private`**; **no LICENSE**; PerfectCorp share **not** confirmed | **Not met** |
+| S2 | Repo public **with relevant licensing** OR private shared with contact_event@PerfectCorp.com | Rules §4; Devpost | **MIT `LICENSE` added** (2026-09-29 harden). GitHub still **`private`**; PerfectCorp share **not** confirmed — human must publicize or email `contact_event@PerfectCorp.com` | **Partial** |
 | S3 | Repo contains source, assets, run instructions | Rules §4 | README + `.env.example` + docs; no secrets | **Met** |
 | S4 | Text description: features, functionality, consumer/retail value | Rules §4; Devpost | README/PRODUCT_DECISION exist; **Devpost submission text not drafted/entered** | **Not met** |
 | S5 | Screenshots of the project | Devpost What to Submit | 6 mock-path shots in project store `media/skincast/` (not in git; not on Devpost) | **Partial** |
@@ -117,7 +117,7 @@ YouCam API Skin AI & eCommerce VTO Hackathon — living checklist.
 | O1 | No secrets in git | `.gitignore` env rules; `.env.example` placeholders; health does not leak key; spot-check clean | **Met** |
 | O2 | Server-only YouCam Bearer | `YOUCAM_API_KEY` server routes; no `NEXT_PUBLIC_` key | **Met** |
 | O3 | Privacy / face images | Portal: uploads deleted in 24h; MVP does not persist faces in DB; preview is request-scoped data URL | **Partial** (document in submission) |
-| O4 | Non-medical positioning | UI disclaimer: “retail wellness demo — not medical advice or diagnosis” | **Met** |
+| O4 | Non-medical positioning | UI disclaimer on footer + concern cast + simulation; README wellness framing | **Met** |
 
 ---
 
@@ -126,11 +126,11 @@ YouCam API Skin AI & eCommerce VTO Hackathon — living checklist.
 | # | Ambiguity | Risk | Safe close |
 | --- | --- | --- | --- |
 | G1 | **Mock vs live YouCam for judging** — Rules require integrate ≥1 YouCam API and Stage 1 “reasonably applies required APIs.” Mock demo may look like a wrapper. | High (disqualify / Stage 1 fail) | Add key → redeem units → redeploy → prove `/api/health` `youcamLive: true` → re-shoot screenshots + video on **live** path. Disclose mock only if forced. |
-| G2 | **Private repo + no license** vs “public with relevant licensing” OR share with `contact_event@PerfectCorp.com` | High (submission incomplete) | Prefer: add LICENSE (e.g. MIT) + make public **or** email PerfectCorp with private access before submit. Do both if unsure. |
+| G2 | **Private repo + no license** vs “public with relevant licensing” OR share with `contact_event@PerfectCorp.com` | High (submission incomplete) | **LICENSE (MIT) shipped.** Remaining: human makes repo public **or** emails PerfectCorp with private access before submit. |
 | G3 | **Video host Youku** listed on Devpost home; Rules §4 list YouTube/Vimeo only | Medium | Use **YouTube (preferred)** or Vimeo. Rules prevail (§11.D). |
 | G4 | **Judging window** Rules Nov 3–20 vs Devpost dates Nov 9–20 | Low (planning) | Plan availability for full Rules window; ask wendy_yen@perfectcorp.com if needed. |
 | G5 | **Medical claims** — Skin Analysis marketed as dermatologist-verified on Perfect Corp site; SkinCast must not diagnose | Medium | Keep wellness disclaimer; never say “diagnosis,” “treat,” “cure”; video script already warns. |
-| G6 | **Commerce “real” vs mock cart** — Rules ask consumer/eCommerce value, not live payments | Low–Med | Mock cart + clear “proof→purchase” story is OK per Lead D7; say “mock checkout” once in video; don’t claim Shopify/live payments. |
+| G6 | **Commerce “real” vs mock cart** — Rules ask consumer/eCommerce value, not live payments | Low–Med | Mock cart titled + copy (“no payments”); demo script says mock once; don’t claim Shopify/live payments. |
 | G7 | **API unit usage evidence** — no rule requires a usage report, but units prove live work | Medium | After live demos, screenshot YouCam console balance/history for internal proof; optional mention in description. |
 | G8 | **Public video + device footage** — must show on target device | Medium | Record browser on laptop **and** phone Safari/Chrome for web MVP; keep ≤3 min. |
 | G9 | **“Built during hackathon”** — new or significantly updated after Submission start | Low | Greenfield Sep 29 commits satisfy; keep changelog; if prior assets reused, document in Devpost text. |

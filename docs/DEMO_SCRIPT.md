@@ -37,7 +37,7 @@ If demo mode: one line — *Running deterministic mock until `YOUCAM_API_KEY` is
 
 ## Commerce close (1:20–1:45)
 
-> Proof → purchase moment: **Add to cart**. Mock checkout for MVP — the product for judges is the analysis → simulation → cart loop.
+> Proof → purchase moment: **Add to cart**. Cart is **mock only** for MVP — no payments. The product for judges is the analysis → simulation → cart loop.
 
 Show success banner / cart summary. Mention wellness disclaimer briefly if time.
 
@@ -69,5 +69,7 @@ Still references (project store): `media/skincast/` — landing, upload, analysi
 
 **Do:** Name Skin Analysis + Skin Simulation explicitly.  
 **Do:** Keep YouCam as the irreplaceable step.  
-**Don’t:** Claim medical diagnosis or live production URL unless verified.  
-**Don’t:** Show `.env` contents or API keys on camera.
+**Do:** Say “Demo mode” once if no key; say “mock cart” once.  
+**Don’t:** Claim medical diagnosis, live payments, or submission-ready without verification.  
+**Don’t:** Show `.env` contents or API keys on camera.  
+**Don’t:** Claim the production URL is live-YouCam unless `/api/health` shows `youcamLive: true`.

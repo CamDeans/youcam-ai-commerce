@@ -10,7 +10,7 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — sha `0d84d16` (Design polish) promoted to production; mock re-verified 2026-09-29 |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — smoke-harden redeploy pending verify this pass; mock until human key |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -41,7 +41,7 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 6. LLM provider for richer agent layer (optional; MVP uses rule-based matching)?
 7. ~~Real Shopify vs mock catalog~~ — mock for MVP (Lead D7; compliance G6 OK if disclosed).
 8. India-region ToS path needed?
-9. **Repo access for judges:** make public + add LICENSE, **or** share private repo with `contact_event@PerfectCorp.com`? (currently private, no license — **Not met**)
+9. **Repo access for judges:** make public **or** share private repo with `contact_event@PerfectCorp.com`? (**MIT LICENSE added**; GitHub still private — **Partial**)
 10. Demo selfie / face likeness consent for public screenshots + video?
 11. Prefer YouTube vs Vimeo for demo video? (Rules: YT/Vimeo; ignore Youku-only home copy — Rules prevail)
 
@@ -95,6 +95,7 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 - [x] `docs/DEMO_SCRIPT.md` (1–3 min)
 - [x] `docs/agent-state/design-qa.md` + mock-path light QA
 - [x] Real app screenshots → project `media/skincast/`
+- [x] Full mock smoke + harden (`docs/TEST_PLAN.md`) — Demo/Live clarity, wellness near scores, mock cart label, validation, 404
 - [ ] Live-key visual QA once human provisions key
 - [ ] Record 1–3 min judge video from demo script
 
@@ -108,7 +109,7 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 
 1. **Human:** Confirm eligibility + Devpost Join + YouCam signup + redeem units.
 2. **Human:** Add `YOUCAM_API_KEY` in Vercel (CONDITIONAL GO once step 1 done); redeploy; confirm `/api/health` → `youcamLive: true`.
-3. **Human / Lead:** Resolve repo judge access (public+LICENSE **or** share with contact_event@PerfectCorp.com).
+3. **Human / Lead:** Resolve repo judge access — **MIT LICENSE added**; still need publicize **or** share with contact_event@PerfectCorp.com.
 4. **Design/QA:** Re-capture **live** screenshots + shoot ≤3 min device video per `DEMO_SCRIPT.md`; host on YouTube/Vimeo.
 5. **Lead/human:** Draft Devpost text description; optional WiT / Rising Star / social bonus; submit before Nov 2 11:45 ET.
 6. **All:** Keep `HACKATHON_COMPLIANCE.md` honest — no fake “ready” claims.
@@ -136,3 +137,4 @@ Lead-owned project state. Updated 2026-09-29 after compliance re-audit (official
 | 2026-09-29 | Design/QA: UX_SPEC, DEMO_SCRIPT, UI polish, mock QA; milestone → DEMO PREP |
 | 2026-09-29 | Engineering: production redeploy required for `0d84d16`; `/` + `/api/health` re-verified mock |
 | 2026-09-29 | Compliance audit: official Devpost/rules re-fetched; matrix rebuilt; ~38% ready; CONDITIONAL GO on credentials; critical gaps = live API, private/unlicensed repo, video |
+| 2026-09-29 | Smoke harden: MIT LICENSE; mock cart/disclaimer/Demo-Live clarity; TEST_PLAN; S2 → Partial (visibility still human) |

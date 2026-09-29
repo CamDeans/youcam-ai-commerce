@@ -1,9 +1,9 @@
 # Agent State — Engineering
 
-**Agent:** Engineering (Agent 3)  
+**Agent:** Engineering + QA (smoke harden)  
 **Last updated:** 2026-09-29  
-**Branch:** `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3)  
-**Status:** Production on Design polish `0d84d16` (redeploy done); mock re-verified; waiting on human YouCam key
+**Branch:** `cursor/smoke-harden-6640` → PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3)  
+**Status:** Mock-path smoke + harden fixes; redeploy verify in progress; waiting on human YouCam key
 
 ---
 
@@ -11,43 +11,37 @@
 
 | Item | Value |
 |------|--------|
-| Concept | **SkinCast** (Lead lock over MirrorLane / ReturnShield) |
-| Milestone | IMPLEMENT → DEMO PREP |
+| Concept | **SkinCast** (Lead lock) |
+| Milestone | DEMO PREP / compliance harden |
 | Stack | Next.js App Router + TypeScript + Tailwind on Vercel |
 | Production URL | **https://youcam-ai-commerce.vercel.app** |
-| Production SHA | `0d84d16` (`dpl_5MZs96N3uuyq2vKRqxeyCnT7zCkP`) |
-| Aliases | `youcam-ai-commerce-sogis.vercel.app`, git branch alias |
 | Vercel | Team SOGIS · project `youcam-ai-commerce` |
 | YouCam | Server-only Bearer; Analysis v2.1 + Simulation v2.0 |
 | Deploy mode now | **mock** (`/api/health` → `youcamLive: false`) |
+| Test plan | `docs/TEST_PLAN.md` |
 
 ---
 
-## Deploy verification (2026-09-29)
+## This pass (smoke harden)
 
-| Check | Result |
-|-------|--------|
-| `GET /` HTTPS 200 HTML with SkinCast | Pass |
-| `GET /api/health` → `{ ok, youcamLive: false, mode: "mock" }` | Pass |
-| `POST /api/analyze` (tiny PNG) → mock concerns + 4 products | Pass (earlier) |
-| Vercel Auth / SSO on deployment | Disabled (public) |
-| Design polish `0d84d16` on production | **Redeploy required** (preview had it; production lagged) → promoted; `/` shows `hero-atmosphere` + step labels |
-
----
-
-## Vertical slice
-
-Landing → selfie upload → `/api/analyze` → matched catalog → `/api/simulate` before/after → add-to-cart.
-
-Design agent may polish UX in parallel — prefer Engineering edits to **API / deploy / config / docs**, not shared UI files when possible.
+- Full mock smoke matrix in `docs/TEST_PLAN.md`
+- File validation (type/size) client + `/api/analyze`
+- Custom `not-found` page
+- Demo vs Live banners; wellness lines on scores + simulation
+- Mock cart labeling + remove line item
+- Focus-visible styles; MIT `LICENSE`
+- README / RELEASE_CHECKLIST / DEMO_SCRIPT accuracy
+- Compliance S2 → Partial (LICENSE; visibility still human)
 
 ---
 
 ## Blockers
 
-- [ ] Human: add `YOUCAM_API_KEY` in Vercel → Settings → Environment Variables (Production + Preview), redeploy — see `docs/SECURITY.md`
-- [ ] Live YouCam smoke after key present
-- [ ] Demo video / screenshots for submission later  
+- [ ] Human: Devpost Join + YouCam signup + redeem units
+- [ ] Human: add `YOUCAM_API_KEY` in Vercel (never git) → redeploy → live smoke
+- [ ] Human: make repo public **or** share with `contact_event@PerfectCorp.com`
+- [ ] Demo video + live screenshots
+- [ ] Devpost submission text/assets
 
 ---
 
@@ -55,7 +49,6 @@ Design agent may polish UX in parallel — prefer Engineering edits to **API / d
 
 | Date | Change |
 |------|--------|
-| 2026-09-29 | Initial empty-repo audit |
-| 2026-09-29 | Merged research; Lead SkinCast lock; ARCHITECTURE + API_INTEGRATION; MVP slice |
-| 2026-09-29 | Vercel production deploy + mock verify; closed superseded PRs #1/#2 |
-| 2026-09-29 | Redeployed production to Design `0d84d16`; re-verified `/` + `/api/health` |
+| 2026-09-29 | Initial empty-repo audit → MVP → production mock |
+| 2026-09-29 | Redeployed Design polish `0d84d16` |
+| 2026-09-29 | Smoke harden: validation, disclaimer, mock cart, LICENSE, TEST_PLAN |

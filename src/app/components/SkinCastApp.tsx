@@ -14,6 +14,17 @@ const STEPS: { id: Step; label: string }[] = [
   { id: "cart", label: "Cart" },
 ];
 
+const ALLOWED_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+]);
+const MAX_BYTES = 8 * 1024 * 1024;
+
+const WELLNESS_LINE =
+  "Retail wellness scores — not medical advice, diagnosis, or treatment.";
+
 function stepIndex(step: Step) {
   if (step === "land") return -1;
   return STEPS.findIndex((s) => s.id === step);
@@ -44,6 +55,17 @@ export default function SkinCastApp() {
   }, []);
 
   function chooseFile(next: File | null) {
+    setError(null);
+    if (next) {
+      const type = (next.type || "").toLowerCase();
+      if (type && !ALLOWED_TYPES.has(type)) {
+        setError("Unsupported file type. Use jpg, png, or webp.");
+        next = null;
+      } else if (next.size > MAX_BYTES) {
+        setError("Image too large. Keep selfies under 8 MB.");
+        next = null;
+      }
+    }
     setPreviewLocal((prev) => {
       if (prev) URL.revokeObjectURL(prev);
       return next ? URL.createObjectURL(next) : null;
@@ -51,7 +73,8 @@ export default function SkinCastApp() {
     setFile(next);
   }
 
-  const modeLabel = health?.youcamLive ? "Live YouCam" : "Demo mode";
+  const isLive = !!health?.youcamLive;
+  const modeLabel = isLive ? "Live YouCam" : "Demo mode";
   const activeIdx = stepIndex(step);
 
   const topConcerns = useMemo(
@@ -117,6 +140,11 @@ export default function SkinCastApp() {
     setStep("cart");
   }
 
+  function removeFromCart(id: string) {
+    setCart((prev) => prev.filter((p) => p.id !== id));
+    setJustAdded(false);
+  }
+
   function resetCast() {
     setStep("land");
     chooseFile(null);
@@ -161,8 +189,13 @@ export default function SkinCastApp() {
           }`}
         >
           <span
+            title={
+              isLive
+                ? "Connected to YouCam Skin Analysis + Skin Simulation"
+                : "Deterministic mock path — same UI as live, no API key"
+            }
             className={`px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] ${
-              health?.youcamLive
+              isLive
                 ? "bg-[var(--deep)] text-[var(--foam)]"
                 : onLand
                   ? "bg-white/15 text-[var(--foam)]"
@@ -223,12 +256,30 @@ export default function SkinCastApp() {
         </nav>
       )}
 
-      {!health?.youcamLive && !onLand && (
-        <p className="mt-4 animate-fade border border-[var(--mist)] bg-white/55 px-4 py-3 text-sm text-[var(--ink-soft)]">
-          Demo mode — set{" "}
-          <code className="text-[var(--deep)]">YOUCAM_API_KEY</code> in{" "}
-          <code className="text-[var(--deep)]">.env.local</code> for live Skin
-          Analysis + Simulation. Never commit the key.
+      {!onLand && (
+        <p
+          className={`mt-4 animate-fade border px-4 py-3 text-sm ${
+            isLive
+              ? "border-[var(--sage)]/45 bg-[var(--sage)]/10 text-[var(--ink-soft)]"
+              : "border-[var(--mist)] bg-white/55 text-[var(--ink-soft)]"
+          }`}
+        >
+          {isLive ? (
+            <>
+              <span className="font-semibold text-[var(--deep)]">Live YouCam</span>
+              {" — "}Skin Analysis + Skin Simulation APIs are connected. Scores
+              are retail wellness signals, not a medical diagnosis.
+            </>
+          ) : (
+            <>
+              <span className="font-semibold text-[var(--deep)]">Demo mode</span>
+              {" — "}full judge path with deterministic mock scores and an
+              illustrative after-cast. Set{" "}
+              <code className="text-[var(--deep)]">YOUCAM_API_KEY</code> in{" "}
+              <code className="text-[var(--deep)]">.env.local</code> / Vercel for
+              live YouCam. Never commit the key.
+            </>
+          )}
         </p>
       )}
 
@@ -292,7 +343,7 @@ export default function SkinCastApp() {
             <button
               type="button"
               onClick={() => setStep("upload")}
-              className="bg-[var(--foam)] px-6 py-3.5 text-sm font-semibold text-[var(--deep)] transition hover:bg-white"
+              className="bg-[var(--foam)] px-6 py-3.5 text-sm font-semibold text-[var(--deep)] transition hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Start skin cast
             </button>
@@ -386,7 +437,14 @@ export default function SkinCastApp() {
                 Concern cast
               </h2>
               <p className="mt-2 text-sm text-[var(--ink-soft)]">
-                YouCam concern scores — pick a match to simulate the after.
+                {isLive ? "YouCam" : "Demo"} concern scores — pick a match to
+                simulate the after.
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-[var(--ink-soft)]">
+                {WELLNESS_LINE}{" "}
+                {isLive
+                  ? "Powered by YouCam Skin Analysis."
+                  : "Mock path until a live YouCam key is configured."}
               </p>
               <ul className="mt-6 space-y-4">
                 {topConcerns.map((c, i) => (
@@ -462,7 +520,13 @@ export default function SkinCastApp() {
           </h2>
           <p className="mt-2 text-sm text-[var(--ink-soft)]">
             {selected.name} · intensities from product claims ·{" "}
-            {simulation.mode}
+            {simulation.mode === "live"
+              ? "Live YouCam Skin Simulation"
+              : "Demo after-cast (illustrative)"}
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-[var(--ink-soft)]">
+            Simulated appearance for shopping confidence — not a clinical
+            prediction or medical claim.
           </p>
 
           <div className="relative mt-8 overflow-hidden border border-[var(--mist)] bg-[var(--sand)]">
@@ -530,10 +594,11 @@ export default function SkinCastApp() {
       {step === "cart" && (
         <section className="mt-8 animate-rise sm:mt-10">
           <h2 className="font-[family-name:var(--font-fraunces)] text-3xl text-[var(--deep)] sm:text-4xl">
-            Cart
+            Mock cart
           </h2>
           <p className="mt-2 text-sm text-[var(--ink-soft)]">
-            Mock checkout for the hackathon MVP — no real payments.
+            Hackathon MVP checkout is <strong>mock only</strong> — no payments,
+            no Shopify handoff, no real orders.
           </p>
 
           {justAdded && cart.length > 0 && (
@@ -541,13 +606,13 @@ export default function SkinCastApp() {
               role="status"
               className="mt-5 animate-rise border border-[var(--sage)]/40 bg-[var(--sage)]/10 px-4 py-3 text-sm font-medium text-[var(--deep)]"
             >
-              Added to cart — you’re cast-ready.
+              Added to mock cart — you’re cast-ready.
             </p>
           )}
 
           {cart.length === 0 ? (
             <div className="mt-8 border border-[var(--mist)] bg-white/50 px-5 py-10 text-center">
-              <p className="text-[var(--ink-soft)]">Your cart is empty.</p>
+              <p className="text-[var(--ink-soft)]">Your mock cart is empty.</p>
               <button
                 type="button"
                 onClick={() => setStep(analysis ? "results" : "upload")}
@@ -561,13 +626,22 @@ export default function SkinCastApp() {
               {cart.map((p) => (
                 <li
                   key={p.id}
-                  className="flex items-center justify-between border border-[var(--mist)] bg-white/70 px-4 py-4"
+                  className="flex items-center justify-between gap-4 border border-[var(--mist)] bg-white/70 px-4 py-4"
                 >
                   <div>
                     <div className="font-semibold">{p.name}</div>
                     <div className="text-sm text-[var(--ink-soft)]">{p.brand}</div>
                   </div>
-                  <div className="tabular-nums">${p.price}</div>
+                  <div className="flex items-center gap-4">
+                    <div className="tabular-nums">${p.price}</div>
+                    <button
+                      type="button"
+                      onClick={() => removeFromCart(p.id)}
+                      className="text-sm text-[var(--ink-soft)] underline-offset-4 hover:underline"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -575,9 +649,9 @@ export default function SkinCastApp() {
 
           {cart.length > 0 && (
             <p className="mt-8 bg-[var(--deep)] px-5 py-5 text-sm leading-relaxed text-[var(--foam)]">
-              You’re cast-ready. In a full launch this would hand off to Shopify
-              / checkout. For judges: the YouCam analysis → simulation → cart
-              path is the product.
+              You’re cast-ready. This mock cart proves the commerce moment —
+              analysis → simulation → cart — for judges. A launch build would
+              hand off to real checkout; this MVP does not charge anyone.
             </p>
           )}
 
@@ -599,15 +673,24 @@ export default function SkinCastApp() {
             : "mt-16 pt-6"
         }`}
       >
-        {onLand && !health?.youcamLive && (
+        {onLand && (
           <p className="mb-3 text-[var(--ink-soft)]">
-            Demo mode — set <code className="text-[var(--deep)]">YOUCAM_API_KEY</code>{" "}
-            for live YouCam Analysis + Simulation. Never commit the key.
+            {isLive ? (
+              <>
+                Live YouCam mode — Skin Analysis + Skin Simulation connected.
+              </>
+            ) : (
+              <>
+                Demo mode — set{" "}
+                <code className="text-[var(--deep)]">YOUCAM_API_KEY</code> for
+                live YouCam Analysis + Simulation. Never commit the key.
+              </>
+            )}
           </p>
         )}
-        SkinCast is a retail wellness demo — not medical advice or diagnosis.
-        YouCam Skin Analysis and Skin Simulation power the visual evidence.
-        Secrets stay in server env only.
+        SkinCast is a retail wellness demo — {WELLNESS_LINE} YouCam Skin
+        Analysis and Skin Simulation power the visual evidence. Cart is mock
+        checkout only. Secrets stay in server env only.
       </footer>
     </div>
   );
