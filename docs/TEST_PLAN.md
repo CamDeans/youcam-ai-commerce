@@ -73,11 +73,22 @@ curl -sS -X POST -F "image=@/tmp/bad.txt;type=text/plain" \
 
 ---
 
+## Browser E2E (computer-use)
+
+Agent [Browser smoke SkinCast](bc-dd80e755-3a18-5fa4-8db4-fa62d64efd39) · report `internal/skincast-browser-qa-report.md` (project store).
+
+| Scope | Result |
+| --- | --- |
+| Prod + local happy path (28 items) | Pass |
+| Mobile landing/upload | Pass |
+| Focus-visible on header controls | Pass |
+| Noted “Cart” heading / default 404 on prod | Stale vs pre-promote; post-promote has **Mock cart** + custom 404 |
+
 ## Failure / QA media
 
 New captures under:
 
-- `/cursor/stores/self/media/skincast/qa/`
+- `/cursor/stores/self/media/skincast/qa/` (`qa-01` … `qa-15`)
 - Prior happy-path: `/cursor/stores/self/media/skincast/01–06-*.png`
 
 ---

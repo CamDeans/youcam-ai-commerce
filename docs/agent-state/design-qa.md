@@ -65,3 +65,4 @@ See `docs/TEST_PLAN.md` for full matrix. High-level:
 |------|--------|
 | 2026-09-29 | UX polish + first mock QA screenshots |
 | 2026-09-29 | Full smoke harden + TEST_PLAN + qa media folder |
+| 2026-09-29 | Browser E2E (bc-dd80e755…) 28/28 mock PASS; report → `internal/skincast-browser-qa-report.md`; prod Mock cart/404 confirmed post-promote |
