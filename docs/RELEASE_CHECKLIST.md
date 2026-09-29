@@ -67,7 +67,7 @@ Derived from the YouCam Hackathon Operating System. Mark **only after verificati
 - [ ] Production YouCam path verified with a real demo run (**blocked on key**)
 - [x] Commerce action verified on deployed environment (**mock cart**)
 - [x] Smoke checklist recorded — `docs/TEST_PLAN.md`
-- [ ] Production redeploy of deploy-readiness harden verified (headers /robots /health fields) — **partner or follow-up after push**
+- [x] Production redeploy of deploy-readiness harden verified — `11049be` / `dpl_5V9PnFG6pJcQbppedw4fsSnREAzw` (headers /robots /health)
 
 ---
 
