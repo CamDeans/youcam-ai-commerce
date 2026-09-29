@@ -1,0 +1,21 @@
+# youcam-ai-commerce — Cursor Rules
+
+Hackathon: YouCam API Skin AI & eCommerce VTO.  
+Project OS: research-first; commercially credible; YouCam essential.
+
+## Non-negotiables
+
+1. **Research-first** — Discover official rules and YouCam capabilities before significant coding. Do not invent the product in code while Product Research / Lead are locking the concept.
+2. **YouCam must be essential** — The product fails the judge test if YouCam is removaable without breaking the core experience.
+3. **No secrets in git** — Use `.env.local` for real keys. Commit `.env.example` with placeholders only. Never commit API keys, tokens, private keys, or credential dumps. See `docs/SECURITY.md`.
+4. **Vertical slices** — Prefer end-to-end slices (YouCam → result → commerce action) over layer-only progress.
+5. **Max 4 agents** — Keep ownership clear; avoid thrash and duplicate PRs on the same files.
+6. **Docs / agent-state sync** — Keep `/docs/agent-state/` updated when status, blockers, or ownership change. Do not overwrite Research-owned files (`PRODUCT_DECISION`, compliance) unless you own them.
+7. **Human checkpoints** — Human authorization required for: account identity / MFA, payments, legal acceptance, production credentials that cannot be env-configured safely, and final Devpost submission.
+8. **No false claims** — Never claim done, deployed, or tested without verification.
+
+## Engineering defaults
+
+- Prefer additive commits that merge cleanly with parallel research docs branches.
+- Scaffold and docs before feature code when product is not locked.
+- Pre-push: run the checklist in `docs/SECURITY.md`.
