@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #1c2b26;
+  --ink-soft: #3d544c;
+  --foam: #f3f7f4;
+  --mist: #d8ebe3;
+  --sage: #6f9b88;
+  --deep: #244037;
+  --coral: #c45c48;
+  --sand: #e7efe9;
+  --glow: rgba(111, 155, 136, 0.35);
+  --background: var(--foam);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-foam: var(--foam);
+  --color-mist: var(--mist);
+  --color-sage: var(--sage);
+  --color-deep: var(--deep);
+  --color-coral: var(--coral);
+  --color-sand: var(--sand);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-figtree);
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--mist), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, #cfe0d8, transparent 50%),
+    linear-gradient(180deg, #eef5f1 0%, var(--foam) 45%, #e5efe9 100%);
+  color: var(--foreground);
+  font-family: var(--font-figtree), system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+::selection {
+  background: var(--sage);
+  color: white;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes slider-sheen {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-rise {
+  animation: rise-in 0.7s ease-out both;
+}
+
+.animate-rise-delay {
+  animation: rise-in 0.8s ease-out 0.12s both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.8s ease-in-out infinite;
+}

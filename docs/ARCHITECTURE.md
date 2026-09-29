@@ -1,101 +1,110 @@
-# Architecture (TEMPLATE)
+# Architecture — SkinCast
 
-> **Status:** Template only. Product concept is **not finalized**.  
-> Fill TBD sections after `docs/PRODUCT_DECISION.md` is locked.  
-> Do not treat this file as an implementation green light.
-
-**Related:** `docs/agent-state/engineering.md` · Project OS · Devpost rules
+**Status:** Active (concept LOCKED by Lead 2026-09-29)  
+**Related:** `docs/PRODUCT_DECISION.md` · `docs/API_INTEGRATION.md` · `docs/SECURITY.md`
 
 ---
 
 ## 1. Purpose
 
-Describe the system that delivers a commercially credible Skin AI / eCommerce VTO experience where **YouCam is essential**.
+**SkinCast** lets shoppers cast their skin before buying: selfie → YouCam Skin Analysis → matched SKUs → YouCam Skin Simulation before/after → add to cart.
+
+YouCam is essential: multi-concern scores and realistic skin simulation on the shopper’s face cannot be replaced by an LLM.
 
 | Field | Value |
 |-------|--------|
-| Product name | TBD — pending Product Research |
-| One-line pitch | TBD |
-| Primary YouCam capability | TBD (Skin AI / VTO / other) |
-| Commerce action | TBD |
+| Product name | SkinCast |
+| One-line pitch | See how a skincare product would change *your* skin before you buy |
+| Primary YouCam capability | Skin Analysis v2.1 + Skin Simulation v2.0 |
+| Commerce action | Mock catalog add-to-cart (MVP) |
 
 ---
 
-## 2. What the current repo already implies
+## 2. What the repo implies / chosen stack
 
-Greenfield audit (`main` as of 2026-09-29):
+Greenfield at discovery; Lead/Engineering locked:
 
-- Repository exists and is empty of application code (`README.md` title only).
-- **No implied framework** (no Next.js, Vite, Python, etc.).
-- **No implied database, auth, or payments stack.**
-- **No implied monorepo or package layout.**
-- Docs and security scaffolding live under `/docs` and root policy files (this PR).
-- Default branch for merges: `main`. Prefer additive docs commits that do not overwrite Research-owned files (`PRODUCT_DECISION`, compliance).
-
-Stack selection is therefore **open** and must follow the locked product decision (hosting needs, realtime VTO vs async Skin AI, commerce provider, etc.).
+| Layer | Choice |
+|-------|--------|
+| Framework | **Next.js App Router** (TypeScript) |
+| Hosting | **Vercel** |
+| YouCam calls | **Server-only** Route Handlers / server actions — Bearer never on client |
+| Catalog | Local JSON mock (8–12 SKUs) |
+| Images | Ephemeral: in-memory / request-scoped upload to YouCam File API; optional **Vercel Blob** or Cloudflare R2 later if a public URL is required — **minimize retention** |
+| Auth | None for MVP demo |
+| Payments | Out of scope (mock cart) |
 
 ---
 
-## 3. High-level system (TBD)
+## 3. High-level system
 
 ```
-[Client UI] --TBD--> [App / API layer] --TBD--> [YouCam APIs]
-                              |
-                              +--TBD--> [Commerce / catalog / checkout]
+[Browser SkinCast UI]
+        |  multipart selfie / product pick
+        v
+[Next.js Route Handlers]  ← YOUCAM_API_KEY (server env only)
+        |-- POST YouCam file upload (or src_file_id flow)
+        |-- POST/GET Skin Analysis v2.1
+        |-- catalog matcher (scores → claim tags)
+        |-- POST/GET Skin Simulation v2.0
+        v
+[Browser] scores + matched products + before/after + cart
 ```
 
-### Components (fill after lock)
+### Components
 
-| Component | Responsibility | TBD |
-|-----------|----------------|-----|
-| Frontend | Capture / upload / try-on UI | Framework, routing, hosting |
-| Backend / BFF | Hide YouCam secrets; orchestrate flows | Runtime, routes |
-| YouCam integration | Skin analysis and/or VTO | Endpoints, SDKs, quotas |
-| Commerce | Product match, cart, checkout or CTA | Provider |
-| Storage | Images, session, results (if any) | Provider + retention |
-| Auth (if any) | User / demo accounts | Provider |
-
----
-
-## 4. Vertical slice (required pattern)
-
-Build **end-to-end** slices, not horizontal-only layers:
-
-1. User triggers YouCam-backed action (photo / camera / SKU try-on).
-2. System returns a **visible YouCam-dependent result**.
-3. User takes a **commerce action** informed by that result.
-
-| Slice | User action | YouCam | Result | Commerce | Status |
-|-------|-------------|--------|--------|----------|--------|
-| Slice 0 (spike) | TBD | TBD | TBD | TBD | Blocked on product |
-| Slice 1 (MVP) | TBD | TBD | TBD | TBD | — |
+| Component | Responsibility |
+|-----------|----------------|
+| `app/` UI | Landing, upload, results, before/after, cart |
+| `app/api/analyze` | Accept selfie; run analysis (or mock); return concerns |
+| `app/api/simulate` | Run simulation for selected product intensities (or mock) |
+| `lib/youcam/*` | Client wrapper: auth header, upload, poll, parse |
+| `data/catalog.json` | SKUs with claim→concern tags + simulation intensity maps |
+| `lib/match.ts` | Rank products from analysis scores |
 
 ---
 
-## 5. Data & privacy (TBD)
+## 4. Vertical slice (MVP)
 
-- Image / biometric handling: TBD (minimize retention; document retention window).
-- PII: TBD.
-- Third parties: YouCam + TBD commerce / hosting.
-- See also `docs/SECURITY.md`.
+1. Land on SkinCast hero → CTA “Cast your skin”.
+2. Upload selfie (consent + wellness disclaimer).
+3. **Analysis** — YouCam when `YOUCAM_API_KEY` set; deterministic **mock** otherwise.
+4. Show concern scores → **matched products**.
+5. Select product → **Skin Simulation** (real or mock) → before/after.
+6. **Add to cart** (in-memory / client cart; confirmation).
 
----
-
-## 6. Environments (TBD)
-
-| Env | URL | Notes |
-|-----|-----|-------|
-| Local | `http://localhost:TBD` | `.env.local` only |
-| Preview | TBD | No secrets in git |
-| Production | TBD | Human for irreversible prod steps |
+| Slice | Status |
+|-------|--------|
+| Slice 1 MVP (above) | In progress on `feat/skincast-mvp` |
 
 ---
 
-## 7. Non-goals (until product lock)
+## 5. Data & privacy
 
-- Choosing a final UI brand system.
-- Committing framework scaffolding that pretends the product is decided.
-- Claiming deploy readiness.
+- Selfies used only to call YouCam or mock; do not persist to app DB in MVP.
+- YouCam portal: uploaded pictures deleted ~24h; task results queryable ~24h.
+- Prefer File API `src_file_id` over long-lived public URLs when possible.
+- If Blob used: short TTL / delete after task success.
+- No medical diagnosis language; retail wellness disclaimer on UI.
+- See `docs/SECURITY.md`.
+
+---
+
+## 6. Environments
+
+| Env | Notes |
+|-----|-------|
+| Local | `npm run dev` · `.env.local` with optional `YOUCAM_API_KEY` |
+| Preview / Production | Vercel env; same key name; never commit secrets |
+
+---
+
+## 7. Non-goals (MVP)
+
+- Real Shopify checkout / Stripe
+- LLM agent chat (rule-based copy citing scores is enough)
+- Camera Kit polish (upload-first)
+- MirrorLane / ReturnShield features
 
 ---
 
@@ -103,14 +112,6 @@ Build **end-to-end** slices, not horizontal-only layers:
 
 | Date | Decision | Owner |
 |------|----------|-------|
-| 2026-09-29 | Architecture file created as template; stack deferred | Engineering |
-| TBD | Product lock → fill sections 1–6 | Lead + Engineering |
-
----
-
-## 9. Open questions for Product / Lead
-
-1. Which YouCam APIs are mandatory for the chosen concept?
-2. Is realtime camera VTO required, or is upload / async Skin AI enough?
-3. What is the minimum credible commerce action for judging?
-4. Any hard constraints on stack (Next.js, Shopify, Stripe, etc.)?
+| 2026-09-29 | SkinCast LOCKED over MirrorLane / ReturnShield | Lead |
+| 2026-09-29 | Next.js App Router + Vercel; server-only YouCam | Engineering |
+| 2026-09-29 | Mock mode when API key absent | Engineering |

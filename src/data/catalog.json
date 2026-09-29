@@ -1,0 +1,152 @@
+[
+  {
+    "id": "niacinamide-clarity",
+    "name": "Clarity Niacinamide Serum",
+    "brand": "SkinCast Lab",
+    "price": 28,
+    "size": "30ml",
+    "summary": "Oil-balancing niacinamide for visible pores and midday shine.",
+    "concerns": ["pore", "oiliness", "texture"],
+    "actives": ["niacinamide 10%", "zinc PCA"],
+    "simulation": {
+      "pores": 0.55,
+      "oiliness": 0.5,
+      "texture": 0.35,
+      "radiance": 0.2
+    }
+  },
+  {
+    "id": "barrier-rescue",
+    "name": "Barrier Rescue Cream",
+    "brand": "SkinCast Lab",
+    "price": 34,
+    "size": "50ml",
+    "summary": "Ceramide-rich cream for dryness and compromised moisture.",
+    "concerns": ["moisture", "texture", "redness"],
+    "actives": ["ceramides", "panthenol", "squalane"],
+    "simulation": {
+      "texture": 0.4,
+      "radiance": 0.35,
+      "redness": 0.25
+    }
+  },
+  {
+    "id": "spot-fade",
+    "name": "Fade Path Vitamin C",
+    "brand": "Lumen Grove",
+    "price": 42,
+    "size": "20ml",
+    "summary": "Gentle brightening for dull tone and post-blemish marks.",
+    "concerns": ["radiance", "age_spot", "acne"],
+    "actives": ["ascorbic acid 15%", "ferulic acid"],
+    "simulation": {
+      "radiance": 0.6,
+      "acne": 0.25,
+      "texture": 0.3
+    }
+  },
+  {
+    "id": "calm-acne",
+    "name": "Calm Reset Gel",
+    "brand": "North Dermis",
+    "price": 26,
+    "size": "40ml",
+    "summary": "Lightweight gel for active breakouts without stripping.",
+    "concerns": ["acne", "oiliness", "redness"],
+    "actives": ["salicylic acid 1%", "centella"],
+    "simulation": {
+      "acne": 0.55,
+      "oiliness": 0.35,
+      "redness": 0.3
+    }
+  },
+  {
+    "id": "line-soft",
+    "name": "Soft Line Peptide Serum",
+    "brand": "Lumen Grove",
+    "price": 48,
+    "size": "30ml",
+    "summary": "Peptides aimed at expression lines and firmness.",
+    "concerns": ["wrinkle", "firmness", "texture"],
+    "actives": ["matrixyl", "bakuchiol"],
+    "simulation": {
+      "wrinkle": 0.5,
+      "texture": 0.35,
+      "radiance": 0.25
+    }
+  },
+  {
+    "id": "under-eye",
+    "name": "Dawn Circle Eye Gel",
+    "brand": "North Dermis",
+    "price": 32,
+    "size": "15ml",
+    "summary": "Cooling gel for dark circles and morning puffiness.",
+    "concerns": ["dark_circle", "eye_bag"],
+    "actives": ["caffeine", "niacinamide"],
+    "simulation": {
+      "dark_circle": 0.5,
+      "radiance": 0.2
+    }
+  },
+  {
+    "id": "pore-primer-serum",
+    "name": "Soft Focus Pore Fluid",
+    "brand": "SkinCast Lab",
+    "price": 30,
+    "size": "30ml",
+    "summary": "Refining fluid for cheek and nose pore visibility.",
+    "concerns": ["pore", "texture", "oiliness"],
+    "actives": ["PHA", "niacinamide"],
+    "simulation": {
+      "pores": 0.6,
+      "texture": 0.45,
+      "oiliness": 0.3
+    }
+  },
+  {
+    "id": "hydrate-mist",
+    "name": "Dew Layer Mist",
+    "brand": "Harbor Botanics",
+    "price": 22,
+    "size": "100ml",
+    "summary": "Midday moisture mist for tight, dehydrated skin.",
+    "concerns": ["moisture", "radiance"],
+    "actives": ["glycerin", "beta-glucan"],
+    "simulation": {
+      "radiance": 0.4,
+      "texture": 0.25
+    }
+  },
+  {
+    "id": "redness-shield",
+    "name": "Quiet Flush Essence",
+    "brand": "Harbor Botanics",
+    "price": 36,
+    "size": "50ml",
+    "summary": "Soothing essence for visible redness and heat.",
+    "concerns": ["redness", "moisture", "texture"],
+    "actives": ["azelaic acid 5%", "green tea"],
+    "simulation": {
+      "redness": 0.55,
+      "texture": 0.3,
+      "radiance": 0.2
+    }
+  },
+  {
+    "id": "night-repair",
+    "name": "Night Cast Retinal",
+    "brand": "Lumen Grove",
+    "price": 54,
+    "size": "30ml",
+    "summary": "Evening retinal for texture and fine lines.",
+    "concerns": ["wrinkle", "texture", "acne", "pore"],
+    "actives": ["retinal 0.05%", "squalane"],
+    "simulation": {
+      "wrinkle": 0.45,
+      "texture": 0.5,
+      "pores": 0.35,
+      "acne": 0.3
+    }
+  }
+]
