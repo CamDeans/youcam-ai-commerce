@@ -54,23 +54,32 @@ describe("parseAnalysisConcerns", () => {
 
 describe("getAppEnv", () => {
   it("defaults base URL and disabled without key", () => {
-    const prevKey = process.env.YOUCAM_API_KEY;
-    const prevBase = process.env.YOUCAM_API_BASE_URL;
-    delete process.env.YOUCAM_API_KEY;
-    delete process.env.YOUCAM_API_BASE_URL;
-    const env = getAppEnv();
+    const env = getAppEnv({
+      YOUCAM_API_KEY: undefined,
+      YOUCAM_API_BASE_URL: undefined,
+    });
     expect(env.youcamEnabled).toBe(false);
+    expect(env.mode).toBe("mock");
     expect(env.youcamBaseUrl).toContain("makeupar.com");
-    process.env.YOUCAM_API_KEY = prevKey;
-    process.env.YOUCAM_API_BASE_URL = prevBase;
   });
 
-  it("falls back when base URL is invalid", () => {
-    const prev = process.env.YOUCAM_API_BASE_URL;
-    process.env.YOUCAM_API_BASE_URL = "not a url";
-    const env = getAppEnv();
+  it("falls back when base URL is invalid in mock", () => {
+    const env = getAppEnv({ YOUCAM_API_BASE_URL: "not a url" });
     expect(env.youcamBaseUrl).toBe("https://yce-api-01.makeupar.com");
-    process.env.YOUCAM_API_BASE_URL = prev;
+    expect(env.mode).toBe("mock");
+  });
+
+  it("fails clearly when YOUCAM_MODE=live without key", () => {
+    expect(() => getAppEnv({ YOUCAM_MODE: "live" })).toThrow(/YOUCAM_MODE=live/);
+  });
+
+  it("fails clearly when key set with invalid base URL", () => {
+    expect(() =>
+      getAppEnv({
+        YOUCAM_API_KEY: "test-key",
+        YOUCAM_API_BASE_URL: "not a url",
+      }),
+    ).toThrow(/YOUCAM_API_BASE_URL/);
   });
 });
 

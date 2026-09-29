@@ -154,7 +154,10 @@ export default function SkinCastApp() {
         method: "POST",
         body,
       });
-      if (!res.ok) throw new Error(data.error || "Analysis failed");
+      if (!res.ok) {
+        const hint = data.retryable ? " You can retry in a moment." : "";
+        throw new Error((data.error || "Analysis failed") + hint);
+      }
       setAnalysis(data.analysis);
       setProducts(data.products ?? []);
       // Prefer local FileReader preview; keep any server echo if present.
@@ -192,7 +195,10 @@ export default function SkinCastApp() {
           previewDataUrl: before,
         }),
       });
-      if (!res.ok) throw new Error(data.error || "Simulation failed");
+      if (!res.ok) {
+        const hint = data.retryable ? " You can retry in a moment." : "";
+        throw new Error((data.error || "Simulation failed") + hint);
+      }
       setSimulation(data.simulation);
       setSlider(55);
       setStep("simulate");

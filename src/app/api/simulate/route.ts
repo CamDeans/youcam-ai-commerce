@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { publicErrorMessage } from "@/lib/api-error";
 import { getProduct } from "@/lib/match";
 import { createRequestId, log } from "@/lib/logger";
 import { clientKeyFromRequest, rateLimit } from "@/lib/rate-limit";
@@ -28,55 +29,93 @@ export async function POST(request: Request) {
     if (!rl.ok) {
       log("warn", "simulate_rate_limited", { requestId });
       return json(
-        { error: "Too many simulation requests. Please wait a moment." },
+        {
+          error: "Too many simulation requests. Please wait a moment.",
+          code: "RATE_LIMIT",
+          retryable: true,
+        },
         { status: 429, requestId },
       );
     }
 
-    const body = (await request.json()) as {
+    let body: {
       productId?: string;
       fileId?: string;
       previewDataUrl?: string;
     };
+    try {
+      body = (await request.json()) as typeof body;
+    } catch {
+      return json(
+        { error: "Invalid JSON body", code: "VALIDATION" },
+        { status: 400, requestId },
+      );
+    }
 
     if (!body.productId) {
-      return json({ error: "productId required" }, { status: 400, requestId });
+      return json(
+        { error: "productId required", code: "VALIDATION" },
+        { status: 400, requestId },
+      );
     }
 
     const product = getProduct(body.productId);
     if (!product) {
-      return json({ error: "Unknown product" }, { status: 404, requestId });
+      return json(
+        { error: "Unknown product", code: "NOT_FOUND" },
+        { status: 404, requestId },
+      );
     }
 
     const { enabled } = getYouCamConfig();
 
     if (!enabled || !body.fileId || body.fileId === "mock-file-id") {
       log("info", "simulate_mock_ok", { requestId, productId: product.id });
-      return json({
-        simulation: {
-          mode: "mock",
-          productId: product.id,
-          beforeDataUrl: body.previewDataUrl,
-          afterImageUrl: mockSimulationImage(product.simulation),
-          intensities: product.simulation,
+      return json(
+        {
+          simulation: {
+            mode: "mock",
+            productId: product.id,
+            beforeDataUrl: body.previewDataUrl,
+            afterImageUrl: mockSimulationImage(product.simulation),
+            intensities: product.simulation,
+          },
         },
-      }, { requestId });
+        { requestId },
+      );
     }
 
-    const { imageUrl } = await runSkinSimulation(body.fileId, product.simulation);
+    const { imageUrl } = await runSkinSimulation(
+      body.fileId,
+      product.simulation,
+    );
     log("info", "simulate_live_ok", { requestId, productId: product.id });
-    return json({
-      simulation: {
-        mode: "live",
-        productId: product.id,
-        beforeDataUrl: body.previewDataUrl,
-        afterImageUrl: imageUrl,
-        intensities: product.simulation,
+    return json(
+      {
+        simulation: {
+          mode: "live",
+          productId: product.id,
+          beforeDataUrl: body.previewDataUrl,
+          afterImageUrl: imageUrl,
+          intensities: product.simulation,
+        },
       },
-    }, { requestId });
+      { requestId },
+    );
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Simulation failed";
-    log("error", "simulate_failed", { requestId, error: message });
-    return json({ error: message }, { status: 502, requestId });
+    const pub = publicErrorMessage(err, "Simulation failed");
+    log("error", "simulate_failed", {
+      requestId,
+      error: pub.error,
+      code: pub.code,
+    });
+    return json(
+      {
+        error: pub.error,
+        code: pub.code,
+        ...(pub.retryable ? { retryable: true } : {}),
+      },
+      { status: pub.status, requestId },
+    );
   }
 }

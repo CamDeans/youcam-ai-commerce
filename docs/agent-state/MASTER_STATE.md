@@ -6,18 +6,18 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + P0
 
 | Agent | Owns | Do not thrash |
 | --- | --- | --- |
-| `bc-f01e4438-…` **Audit deploy readiness** | Gap matrix `docs/deploy-readiness.md` (store) + **P0/P1 code** on `feat/skincast-mvp` (CI, tests, headers, timeouts, error boundaries, SEO/robots, API harden) | Same files listed in engineering sync |
-| `bc-7aa549a9-…` **Harden prod pre-credentials** | After this push: **pull/rebase**, prefer **Vercel redeploy verify** + leftover P1 not already landed | Avoid parallel edits to `next.config.ts`, `youcam/client.ts`, API routes, CI until pull |
+| `bc-f01e4438-…` **Audit deploy readiness** | Gap matrix + P0/P1 baseline on `feat/skincast-mvp` | Done @ `11049be` |
+| `bc-7aa549a9-…` **Harden prod pre-credentials** | Complement (Playwright, API route tests, secret-safe errors, env live-fail) + **Vercel promote/verify** | In progress |
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| Milestone | **DEMO PREP → DEPLOY HARDENING (pre-credentials)** (~38% submission; P0/P1 can-fix-now on PR #3; live YouCam + video + repo access still open) |
+| Milestone | **DEMO PREP → PROD HARDEN (pre-credentials)** (~50% eng harden; submission still blocked on live YouCam + video + repo access) |
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
-| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — still **mock** @ smoke-harden `a20856d` until harden commit promoted; `/api/health` `youcamLive: false` |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** — promote verify of harden SHA in flight; still **mock** until human key |
 | Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
 | Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
@@ -89,14 +89,15 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + P0
 - [x] Env/secrets pattern; server-only YouCam proxy
 - [x] Vercel project linked + production deploy (mock verified)
 - [x] Deploy-readiness matrix (store `docs/deploy-readiness.md`) + P0/P1 can-fix-now on PR #3
-- [ ] Promote harden commit to production + verify headers/robots/health (partner)
+- [x] Complement: Playwright smoke, API route vitest, secret-safe API errors, `YOUCAM_MODE=live` fail-clearly
+- [ ] Promote harden commit to production + verify headers/robots/health (partner — in flight)
 - [ ] Update compliance privacy/deploy rows with final URLs for submit
 
 ### Build
 - [x] Vertical slice scaffold: landing → upload → analysis → match → simulation → cart
 - [x] Mock mode when `YOUCAM_API_KEY` absent; real APIs when present
 - [x] Deploy to Vercel — **https://youcam-ai-commerce.vercel.app** (mock smoke OK)
-- [x] CI + vitest + security headers/CSP + YouCam timeouts/retries + rate limits + error boundaries + SEO/robots
+- [x] CI + vitest + Playwright + security headers/CSP + YouCam timeouts/retries + rate limits + error boundaries + SEO/robots + secret-safe errors
 - [ ] Production smoke with **real** YouCam key (blocked on human env)
 - [x] README polish for judges (problem / solution / why YouCam)
 
@@ -117,7 +118,7 @@ Lead-owned project state. Updated 2026-09-29 after **deploy-readiness audit + P0
 
 ## Next actions (ordered)
 
-1. **Partner (`bc-7aa549a9`):** Pull `feat/skincast-mvp`, promote/redeploy, verify security headers + `/robots.txt` + richer `/api/health` on production (still mock).
+1. **Partner (`bc-7aa549a9`):** Promote/redeploy harden; verify security headers + `/robots.txt` + `/api/health` on production (still mock).
 2. **Human:** Confirm eligibility + Devpost Join + YouCam signup + redeem units.
 3. **Human:** Add `YOUCAM_API_KEY` in Vercel (**after** step 1–2 engineering verify); redeploy; confirm `/api/health` → `youcamLive: true`.
 4. **Human / Lead:** Resolve repo judge access — **MIT LICENSE added**; still need publicize **or** share with contact_event@PerfectCorp.com.

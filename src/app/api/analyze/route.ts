@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { publicErrorMessage } from "@/lib/api-error";
 import { matchProducts } from "@/lib/match";
 import { createRequestId, log } from "@/lib/logger";
 import { clientKeyFromRequest, rateLimit } from "@/lib/rate-limit";
@@ -38,9 +39,16 @@ export async function POST(request: Request) {
       windowMs: 60_000,
     });
     if (!rl.ok) {
-      log("warn", "analyze_rate_limited", { requestId, retryAfterSec: rl.retryAfterSec });
+      log("warn", "analyze_rate_limited", {
+        requestId,
+        retryAfterSec: rl.retryAfterSec,
+      });
       return json(
-        { error: "Too many analysis requests. Please wait a moment." },
+        {
+          error: "Too many analysis requests. Please wait a moment.",
+          code: "RATE_LIMIT",
+          retryable: true,
+        },
         { status: 429, requestId },
       );
     }
@@ -48,19 +56,28 @@ export async function POST(request: Request) {
     const form = await request.formData();
     const file = form.get("image");
     if (!(file instanceof File)) {
-      return json({ error: "Missing image file" }, { status: 400, requestId });
+      return json(
+        { error: "Missing image file", code: "VALIDATION" },
+        { status: 400, requestId },
+      );
     }
 
     const contentType = (file.type || "").toLowerCase();
     if (contentType && !ALLOWED_TYPES.has(contentType)) {
       return json(
-        { error: "Unsupported file type. Use jpg, png, or webp." },
+        {
+          error: "Unsupported file type. Use jpg, png, or webp.",
+          code: "VALIDATION",
+        },
         { status: 400, requestId },
       );
     }
     if (file.size > MAX_BYTES) {
       return json(
-        { error: "Image too large. Keep selfies under 8 MB." },
+        {
+          error: "Image too large. Keep selfies under 8 MB.",
+          code: "VALIDATION",
+        },
         { status: 400, requestId },
       );
     }
@@ -91,7 +108,10 @@ export async function POST(request: Request) {
     const safeConcerns =
       concerns.length > 0
         ? concerns
-        : mockAnalysis().concerns.map((c) => ({ ...c, score: Math.max(20, c.score - 10) }));
+        : mockAnalysis().concerns.map((c) => ({
+            ...c,
+            score: Math.max(20, c.score - 10),
+          }));
 
     const summary = skinType
       ? `Live YouCam analysis · skin type signal: ${skinType}. Top concerns ranked for matching.`
@@ -115,8 +135,19 @@ export async function POST(request: Request) {
 
     return json({ analysis, products }, { requestId });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Analysis failed";
-    log("error", "analyze_failed", { requestId, error: message });
-    return json({ error: message }, { status: 502, requestId });
+    const pub = publicErrorMessage(err, "Analysis failed");
+    log("error", "analyze_failed", {
+      requestId,
+      error: pub.error,
+      code: pub.code,
+    });
+    return json(
+      {
+        error: pub.error,
+        code: pub.code,
+        ...(pub.retryable ? { retryable: true } : {}),
+      },
+      { status: pub.status, requestId },
+    );
   }
 }
