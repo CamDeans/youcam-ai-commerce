@@ -1,12 +1,12 @@
 # MASTER_STATE
 
-Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering MVP slice.
+Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering MVP slice + Design/QA polish.
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| Milestone | **IMPLEMENT** (MVP deployed; UX polish in parallel) |
+| Milestone | **IMPLEMENT → DEMO PREP** (MVP deployed; UX polish + screenshots on #3) |
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
 | Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
@@ -81,29 +81,41 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 - [x] Mock mode when `YOUCAM_API_KEY` absent; real APIs when present
 - [x] Deploy to Vercel — **https://youcam-ai-commerce.vercel.app** (mock smoke OK)
 - [ ] Production smoke with **real** YouCam key (blocked on human env)
-- [ ] README polish for judges (Design may own UX copy)
+- [x] README polish for judges (problem / solution / why YouCam)
+
+### Design / QA
+- [x] `docs/UX_SPEC.md` + commercial UI polish (hero, states, motion)
+- [x] `docs/DEMO_SCRIPT.md` (1–3 min)
+- [x] `docs/agent-state/design-qa.md` + mock-path light QA
+- [x] Real app screenshots → project `media/skincast/`
+- [ ] Live-key visual QA once human provisions key
+- [ ] Record 1–3 min judge video from demo script
 
 ### Demo / Submit (later)
-- [ ] Screenshots, 1–3 min video, Devpost text
+- [ ] Screenshots on Devpost + 1–3 min public video
 - [ ] Optional social sharing bonus
 - [ ] Final compliance audit; human submits
 
 ## Next actions (ordered)
 
 1. **Human:** Add `YOUCAM_API_KEY` in Vercel project Settings → Environment Variables; redeploy; confirm `/api/health` → `youcamLive: true`.
-2. **Engineering / Design:** Avoid thrashing UI vs API files; Design polishes UX on #3; Engineering stays on deploy/config/API.
-3. **All:** Keep `HACKATHON_COMPLIANCE.md` rows updated.
-4. **Demo:** Capture judge video once live YouCam path verified.
+2. **Engineering / Design:** Avoid thrashing UI vs API files; Design owns UX on #3; Engineering stays on deploy/config/API.
+3. **Design/QA:** Re-capture live screenshots + shoot demo video per `DEMO_SCRIPT.md` once key is live.
+4. **All:** Keep `HACKATHON_COMPLIANCE.md` rows updated.
+5. **Lead/human:** Devpost join, eligibility, final submission package.
 
 ## Specialist state pointers
 
 - Product: `docs/agent-state/product.md`
 - Engineering: `docs/agent-state/engineering.md`
+- Design/QA: `docs/agent-state/design-qa.md`
 - Compliance: `docs/HACKATHON_COMPLIANCE.md`
 - API research: `docs/research/youcam-api-overview.md`
 - API integration: `docs/API_INTEGRATION.md`
 - Architecture: `docs/ARCHITECTURE.md`
 - Decision: `docs/PRODUCT_DECISION.md`
+- UX: `docs/UX_SPEC.md`
+- Demo: `docs/DEMO_SCRIPT.md`
 
 ## Changelog
 
@@ -112,3 +124,4 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 | 2026-09-29 | Initial MASTER_STATE by Agent 2 (Discover) |
 | 2026-09-29 | Lead LOCK SkinCast; milestone DESIGN→IMPLEMENT; Engineering MVP slice |
 | 2026-09-29 | Production deploy https://youcam-ai-commerce.vercel.app verified mock; PRs #1/#2 closed → #3 |
+| 2026-09-29 | Design/QA: UX_SPEC, DEMO_SCRIPT, UI polish, mock QA; milestone → DEMO PREP |
