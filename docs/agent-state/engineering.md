@@ -2,8 +2,8 @@
 
 **Agent:** Engineering (Agent 3)  
 **Last updated:** 2026-09-29  
-**Branch:** `feat/skincast-mvp`  
-**Status:** SkinCast LOCKED — vertical slice implemented (mock + live paths)
+**Branch:** `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3)  
+**Status:** MVP **deployed** (mock verified); waiting on human for live YouCam key
 
 ---
 
@@ -12,10 +12,24 @@
 | Item | Value |
 |------|--------|
 | Concept | **SkinCast** (Lead lock over MirrorLane / ReturnShield) |
-| Milestone | DESIGN → IMPLEMENT |
-| Stack | Next.js App Router + TypeScript + Tailwind; Vercel-ready |
+| Milestone | IMPLEMENT |
+| Stack | Next.js App Router + TypeScript + Tailwind on Vercel |
+| Production URL | **https://youcam-ai-commerce.vercel.app** |
+| Aliases | `youcam-ai-commerce-sogis.vercel.app`, git branch alias |
+| Vercel | Team SOGIS · project `youcam-ai-commerce` |
 | YouCam | Server-only Bearer; Analysis v2.1 + Simulation v2.0 |
-| Mode | Mock without `YOUCAM_API_KEY`; live when key present |
+| Deploy mode now | **mock** (`/api/health` → `youcamLive: false`) |
+
+---
+
+## Deploy verification (2026-09-29)
+
+| Check | Result |
+|-------|--------|
+| `GET /` HTTPS 200 HTML with SkinCast | Pass |
+| `GET /api/health` → `{ ok, youcamLive: false, mode: "mock" }` | Pass |
+| `POST /api/analyze` (tiny PNG) → mock concerns + 4 products | Pass |
+| Vercel Auth / SSO on deployment | Disabled (public) |
 
 ---
 
@@ -23,30 +37,14 @@
 
 Landing → selfie upload → `/api/analyze` → matched catalog → `/api/simulate` before/after → add-to-cart.
 
-| Path | Role |
-|------|------|
-| `src/app/page.tsx` + `components/SkinCastApp.tsx` | UI flow |
-| `src/app/api/analyze` | Multipart → mock or YouCam analysis + matches |
-| `src/app/api/simulate` | Product intensities → mock or YouCam simulation |
-| `src/app/api/health` | Reports live vs mock (no secrets) |
-| `src/lib/youcam/client.ts` | File upload, poll, parse |
-| `src/data/catalog.json` | Mock SKUs + simulation maps |
-
----
-
-## Constraints
-
-1. Research-first / YouCam essential / no secrets in git  
-2. Bearer never on client (`NEXT_PUBLIC_` forbidden for key)  
-3. Minimize image retention (File API; no app DB for selfies in MVP)  
-4. Do not overwrite Research compliance docs casually; sync MASTER_STATE with Lead
+Design agent may polish UX in parallel — prefer Engineering edits to **API / deploy / config / docs**, not shared UI files when possible.
 
 ---
 
 ## Blockers
 
-- [ ] Human must provision `YOUCAM_API_KEY` (Devpost redeem / YouCam console) into `.env.local` or Vercel — documented in MASTER_STATE open questions  
-- [ ] Production deploy + live smoke still pending  
+- [ ] Human: add `YOUCAM_API_KEY` in Vercel → Settings → Environment Variables (Production + Preview), redeploy — see `docs/SECURITY.md`
+- [ ] Live YouCam smoke after key present
 - [ ] Demo video / screenshots for submission later  
 
 ---
@@ -57,3 +55,4 @@ Landing → selfie upload → `/api/analyze` → matched catalog → `/api/simul
 |------|--------|
 | 2026-09-29 | Initial empty-repo audit |
 | 2026-09-29 | Merged research; Lead SkinCast lock; ARCHITECTURE + API_INTEGRATION; MVP slice |
+| 2026-09-29 | Vercel production deploy + mock verify; closed superseded PRs #1/#2 |

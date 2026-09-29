@@ -92,10 +92,13 @@ Greenfield at discovery; Lead/Engineering locked:
 
 ## 6. Environments
 
-| Env | Notes |
-|-----|-------|
-| Local | `npm run dev` · `.env.local` with optional `YOUCAM_API_KEY` |
-| Preview / Production | Vercel env; same key name; never commit secrets |
+| Env | URL | Notes |
+|-----|-----|-------|
+| Local | `http://localhost:3000` | `.env.local` with optional `YOUCAM_API_KEY` |
+| Production | **https://youcam-ai-commerce.vercel.app** | Mock until human sets `YOUCAM_API_KEY` in Vercel env |
+| Preview | Vercel git aliases for PR branches | Same env pattern |
+
+Vercel project: SOGIS / `youcam-ai-commerce`. See `docs/SECURITY.md` for where to add the key.
 
 ---
 

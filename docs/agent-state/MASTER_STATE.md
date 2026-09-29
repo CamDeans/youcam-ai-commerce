@@ -6,11 +6,13 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 
 | Field | Value |
 | --- | --- |
-| Milestone | **DESIGN → IMPLEMENT** |
+| Milestone | **IMPLEMENT** (MVP deployed; UX polish in parallel) |
 | Concept | **SkinCast — LOCKED** (Lead over MirrorLane / ReturnShield) |
 | Repo | CamDeans/youcam-ai-commerce |
-| Branch (engineering) | `feat/skincast-mvp` |
-| Branch (research) | `cursor/docs-discover-research-4602` (merged into MVP branch) |
+| Branch (engineering) | `feat/skincast-mvp` · PR [#3](https://github.com/CamDeans/youcam-ai-commerce/pull/3) |
+| Deploy (production) | **https://youcam-ai-commerce.vercel.app** (verified mock) |
+| Vercel project | SOGIS / `youcam-ai-commerce` (`prj_2Ot0tEE6rDmIHnbDfpy5fWWQDTJn`) |
+| Branch (research) | `cursor/docs-discover-research-4602` (merged; PR #2 closed) |
 | Hackathon deadline | **Nov 2, 2026 @ 11:45am EST** (submission + registration end) |
 | Submission opens | Sep 29, 2026 12:00 ET |
 | Judging | Nov 3–20, 2026; winners ~Nov 24, 2026 |
@@ -33,7 +35,7 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 
 1. ~~Confirm or reject SkinCast~~ — **LOCKED SkinCast.**
 2. Devpost registration completed? Redeem code email received?
-3. **YouCam account + `YOUCAM_API_KEY` + unit balance** — human must place key in `.env.local` / Vercel env only (never git/chat). App runs in **mock mode** until key is present.
+3. **YouCam account + `YOUCAM_API_KEY` + unit balance** — human must add key in Vercel → project **youcam-ai-commerce** → Settings → Environment Variables (Production + Preview), then redeploy. Also `.env.local` for local. See `docs/SECURITY.md`. Deployed site is **mock** until this is done.
 4. Entrant eligibility (age, country — exclusions include China, Italy, Brazil, Quebec, etc.)?
 5. Team composition / Representative? Women in Tech or Rising Star opt-in?
 6. LLM provider for richer agent layer (optional; MVP uses rule-based matching)?
@@ -71,13 +73,15 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 - [x] `docs/ARCHITECTURE.md` (SkinCast)
 - [x] `docs/API_INTEGRATION.md`
 - [x] Env/secrets pattern; server-only YouCam proxy
-- [ ] Update compliance privacy/deploy rows as deploy lands
+- [x] Vercel project linked + production deploy (mock verified)
+- [ ] Update compliance privacy/deploy rows with final URLs for submit
 
 ### Build
 - [x] Vertical slice scaffold: landing → upload → analysis → match → simulation → cart
 - [x] Mock mode when `YOUCAM_API_KEY` absent; real APIs when present
-- [ ] Deploy to Vercel + production smoke with real key
-- [ ] README polish for judges
+- [x] Deploy to Vercel — **https://youcam-ai-commerce.vercel.app** (mock smoke OK)
+- [ ] Production smoke with **real** YouCam key (blocked on human env)
+- [ ] README polish for judges (Design may own UX copy)
 
 ### Demo / Submit (later)
 - [ ] Screenshots, 1–3 min video, Devpost text
@@ -86,10 +90,10 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 
 ## Next actions (ordered)
 
-1. **Human:** Place `YOUCAM_API_KEY` in `.env.local` / Vercel (never git).
-2. **Engineering:** Deploy preview; smoke real analysis + simulation with key.
+1. **Human:** Add `YOUCAM_API_KEY` in Vercel project Settings → Environment Variables; redeploy; confirm `/api/health` → `youcamLive: true`.
+2. **Engineering / Design:** Avoid thrashing UI vs API files; Design polishes UX on #3; Engineering stays on deploy/config/API.
 3. **All:** Keep `HACKATHON_COMPLIANCE.md` rows updated.
-4. **Demo:** Capture judge video once production path verified.
+4. **Demo:** Capture judge video once live YouCam path verified.
 
 ## Specialist state pointers
 
@@ -107,3 +111,4 @@ Lead-owned project state. Updated 2026-09-29 after SkinCast lock + Engineering M
 | --- | --- |
 | 2026-09-29 | Initial MASTER_STATE by Agent 2 (Discover) |
 | 2026-09-29 | Lead LOCK SkinCast; milestone DESIGN→IMPLEMENT; Engineering MVP slice |
+| 2026-09-29 | Production deploy https://youcam-ai-commerce.vercel.app verified mock; PRs #1/#2 closed → #3 |

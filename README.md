@@ -8,6 +8,10 @@ Cast your skin before you buy — YouCam **Skin Analysis** + **Skin Simulation**
 
 Without YouCam concern scores and on-face skin simulation, this is generic advice chat. The demo path is: selfie → analysis → matched products → before/after simulation → cart.
 
+## Live demo
+
+**https://youcam-ai-commerce.vercel.app** — production deploy from `feat/skincast-mvp` (runs in **mock** until a human adds `YOUCAM_API_KEY` in Vercel).
+
 ## Local run
 
 ```bash
@@ -26,6 +30,14 @@ Open [http://localhost:3000](http://localhost:3000).
 |------|-----------|----------|
 | **Mock** | No `YOUCAM_API_KEY` | Full UI with deterministic scores + SVG “after” |
 | **Live** | Key set in `.env.local` / Vercel | Real File + Skin Analysis v2.1 + Skin Simulation |
+
+### Add YouCam key on Vercel (human)
+
+1. Vercel → team **SOGIS** → project **youcam-ai-commerce** → **Settings → Environment Variables**
+2. Add sensitive `YOUCAM_API_KEY` for Production + Preview (never `NEXT_PUBLIC_`)
+3. Redeploy, then confirm `/api/health` shows `"youcamLive": true`
+
+Details: `docs/SECURITY.md`
 
 ## Docs
 

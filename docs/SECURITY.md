@@ -46,10 +46,27 @@ Example shape (placeholders only):
 ```bash
 # .env.example
 YOUCAM_API_KEY=
-YOUCAM_API_BASE_URL=
+YOUCAM_API_BASE_URL=https://yce-api-01.makeupar.com
 # COMMERCE_PROVIDER_KEY=
 # DATABASE_URL=
 ```
+
+### Where humans add `YOUCAM_API_KEY` (Vercel)
+
+Deployed app runs in **mock/demo mode** until this secret is set. Agents must not invent or paste the key into git/chat.
+
+1. Open [Vercel Dashboard](https://vercel.com) → team **SOGIS** → project **youcam-ai-commerce**.
+2. **Settings → Environment Variables**.
+3. Add:
+   - **Key:** `YOUCAM_API_KEY`
+   - **Value:** your YouCam console API key (from https://yce.perfectcorp.com/api-console/en/api-keys/)
+   - **Environments:** Production + Preview (and Development if desired)
+   - **Type:** Sensitive / encrypted (do not mark as `NEXT_PUBLIC_`)
+4. Optionally confirm `YOUCAM_API_BASE_URL` = `https://yce-api-01.makeupar.com` (already set as plain).
+5. **Redeploy** production (Deployments → … → Redeploy) so the function runtime picks up the new env.
+6. Verify: `GET /api/health` should return `"youcamLive": true`, `"mode": "live"`.
+
+Local: copy `.env.example` → `.env.local` and fill `YOUCAM_API_KEY` there only.
 
 ---
 
